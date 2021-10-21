@@ -425,8 +425,9 @@ async def song(ctx):
 @bot.command(name='skip')
 async def skip(ctx):
     global mpd, playlist, played
-    mpd.connect()
-    if ctx.author.name.lower() == config('CHANNEL') or ctx.tags['mod'] == 1:
+    
+    if ctx.author.name.lower() == config('CHANNEL') or ctx.author.is_mod == True:
+        mpd.connect()
         mpd.next()
 
         await ctx.send('Song skipped!')
@@ -473,8 +474,9 @@ async def skip(ctx):
 @bot.command(name='raidsong')
 async def raid(ctx):
     global mpd, reqpos, played
-    mpd.connect()
-    if ctx.author.name.lower() == config('CHANNEL') or ctx.tags['mod'] == 1:
+
+    if ctx.author.name.lower() == config('CHANNEL') or ctx.author.is_mod == True:
+        mpd.connect()
         pos = int(mpd.currentsong()['pos'])
         mpd.addid("Raid/Beat - Vulpine Skyflight.ogg", pos+1)
         mpd.next()
@@ -516,6 +518,7 @@ async def rr(ctx, artist=None):
 
             #print(artistsongs)
             if not artistsongs:
+                mpd.disconnect()
                 await ctx.send(f"No songs found in today's playlist from {artist}.")
             else:
                 selected = random.choice(artistsongs)
@@ -641,8 +644,10 @@ async def rr(ctx, genreinput):
     songlist = []
     randsonglist = []
 
-    if ctx.author.name.lower() == config('CHANNEL') or ctx.tags['mod'] == 1:
+    if ctx.author.name.lower() == config('CHANNEL') or ctx.author.is_mod == True:
         if genreinput in ["Jazz", "Chill", "Dance", "Metal", "DrumNBass", "Mixes", "ProsoMix", "Twitch", "Weird"]:
+            mpd.clear()
+            
             genre = genreinput
 
             files = [os.path.join(f"{music_path}/{genre}/", file) for file in os.listdir(f"{music_path}/{genre}/")]
@@ -905,6 +910,7 @@ async def kill(ctx):
         mpd.disconnect()
         sys.exit(0)
     else:
+        mpd.disconnect()
         await ctx.send("You don't have permission to do that.")
 
 if __name__ == "__main__":
