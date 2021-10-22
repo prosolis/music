@@ -56,7 +56,7 @@ req_timer = {} #{song name: clock time requested}
 
 genre = "" #set from genre of the day
 
-fuzzyconfidence = 85 #sets fuzzywuzzy param, 85 works good
+fuzzyconfidence = 95 #sets fuzzywuzzy param, 85 works good
 
 subscribers = {} #Subscriber Name : # of requests they have
 subscribers[config('CHANNEL')] = 1000
@@ -65,7 +65,7 @@ played = [] #ids of song played
 
 twitch = { #Twitch artist promo
     "ArCaJazz" : "Please check out more ArCaJazz goodness via the following links: • Twitch: https://twitch.tv/arcajazz • Spotify: Ariel Calabria • Bandcamp: https://arcajazz.bandcamp.com/ • Instagram: arcajazz",
-    "Callsign Scarecrow" : "Please check out more CallsignScarecrow goodness via the following links: • Twitch: https://www.twitch.tv/callsignscarecrow • Spotify: https://open.spotify.com/artist/2ATXEER8LOT0lZxgxwNuSU • Aubryn's Twitch (Musician featured in 'You Haunt Me'): https://www.twitch.tv/aubrynmusic",
+    "CallsignScarecrow" : "Please check out more CallsignScarecrow goodness via the following links: • Twitch: https://www.twitch.tv/callsignscarecrow • Spotify: https://open.spotify.com/artist/2ATXEER8LOT0lZxgxwNuSU • Aubryn's Twitch (Musician featured in 'You Haunt Me'): https://www.twitch.tv/aubrynmusic",
     "Calvin Thomas" : "Please check out more Calvin Thomas goodness via the following links: • Twitch: https://www.twitch.tv/calvinthomasmusic • Spotify: https://spoti.fi/3unhJF1 • Bandcamp: https://calvinthomasmusic.bandcamp.com/ • Twitter: https://twitter.com/calvinthomasmus • Instagram: https://www.instagram.com/calvinthomasmusic/ • Website: https://calvinthomasmusic.com/home",
     "Chika_Tatsuya" : "Please check out more Chika_Tatsuya goodness via the following links: • Twitch: https://twitch.tv/chika_tatsuya • Bandcamp: https://chikatanaka.bandcamp.com/",
     "FiKTaH" : "Please check out more FiKTaH goodness via the following links: • Twitch: https://twitch.tv/fiktah",
@@ -74,7 +74,7 @@ twitch = { #Twitch artist promo
     "JuanorPiano" : "Please check out more JuanorPiano goodness via the following links: • Twitch: https://twitch.tv/juanorpiano • Bandcamp: https://juanortiz.bandcamp.com/",
     "kellygates47" : "Please check out more kellygates47 goodness via the following links: • Twitch: https://twitch.tv/kellygates47 • Spotify:  https://open.spotify.com/artist/5Vh7pAIeanZ3OJWkFXDEQ4?si=8v7cEYjBT-OApEWj7UAJLA • Bandcamp: https://kellygates.bandcamp.com/ • Website: https://kellygatesmusic.com",
     "Keyboard Grinder" : "Please check out more Keyboard Grinder goodness via the following links: • Twitch: https://twitch.tv/keyboardgrinder",
-    "MalaykaMusic" : "Please check out more MalaykaMusic goodness via the following links: • Twitch: https://twitch.tv/malakyamusic • Spotify: https://open.spotify.com/artist/4DJk09zggqa3otcA3gtPNM?si=NjJwJur-QoG50zDULWGIcg&dl_branch=1 • Instagram: www.instagram/com/malaykamusic • Apple Music: https://music.apple.com/us/artist/malayka/1525654543 • Youtube: www.youtube.com/c/malaykamusic",
+    "MalaykaMusic" : "Please check out more MalaykaMusic goodness via the following links: • Twitch: https://twitch.tv/malaykamusic • Spotify: https://open.spotify.com/artist/4DJk09zggqa3otcA3gtPNM?si=NjJwJur-QoG50zDULWGIcg&dl_branch=1 • Instagram: www.instagram/com/malaykamusic • Apple Music: https://music.apple.com/us/artist/malayka/1525654543 • Youtube: www.youtube.com/c/malaykamusic",
     "MikeBassMusic" : "Please check out more MikeBassMusic goodness via the following links: • Twitch: https://twitch.tv/mikebassmusic",
     "MyManEvans" : "Please check out more StringPlayerGamer goodness via the following links: • Twitch: https://twitch.tv/mymanevans • Youtube: https://www.youtube.com/channel/UCN_H0p4O4jRn2VOd3KDp28A",
     "OrchKeystraMusic" : "Please check out more OrchKeystraMusic goodness via the following links: • Twitch: https://twitch.tv/OrchKeystraMusic • Patreon: https://patreon.com/OrchKeystraMusic • Youtube: https://youtube.com/OrchKeystraMusic • Instagram: https://www.instagram.com/orchkeystra_music",
@@ -84,6 +84,7 @@ twitch = { #Twitch artist promo
     "StringPlayerGamer" : "Please check out more StringPlayerGamer goodness via the following links: • Twitch: https://twitch.tv/StringPlayerGamer • Spotify: https://open.spotify.com/artist/4tyZ8F1QPVTJ1EbkrlnpMd • YouTube: https://www.youtube.com/thestringplayergamer • Bandcamp(s): https://diwadeleon.bandcamp.com/ https://stringplayergamer.bandcamp.com/",
     "The Complements" : "Please check out more The Complements goodness via the following links: • Twitch: https://twitch.tv/thecomplements • Spotify: https://open.spotify.com/artist/0tU85IJB7ZSiF8vzN8JbdV?si=G8ffSaD8RHeL3R7DEBUOWA • Apple Music: https://music.apple.com/us/artist/the-complements/1244374343 • Youtube: http://youtube.com/thecomplements • Instagram: http://instagram.com/wearethecomplements",
     "TheFunkySpud" : "Please check out more TheFunkySpud goodness via the following links: • Twitch: https://twitch.tv/thefunkyspud • Youtube: https://www.youtube.com/c/thefunkyspud",
+    "Windy_Harper" : "Please check out more Windy Harper goodness via the following links: • Twitch: https://www.twitch.tv/windy_harper • Instagram: https://www.instagram.com/windyharper15/ • Youtube: www.youtube.com/windyharper",
     "YentingLo" : "Please check out more YentingLo goodness via the following links: • Twitch: https://twitch.tv/yentinglo • Spotify: https://open.spotify.com/artist/6W7lSbguF67nqkK6djqd8z?si=L7DNRY9yQx24NE8FmWQFDA&dl_branch=1 • Bandcamp: https://yentinglo.bandcamp.com/ • Website: https://yentinglo.net/ • Youtube: https://www.youtube.com/YenTingLo • Instagram: https://www.instagram.com/yenting.lo/"
 }
 
@@ -162,7 +163,7 @@ async def event_message(ctx):
         current_time = time.time()
 
         for songs in songlist:
-            if fuzz.WRatio(sname,songs[0])>fuzzyconfidence:
+            if fuzz.token_set_ratio(sname,songs[0])>fuzzyconfidence:
                 if req_timer.__contains__(songs[0]) and current_time-req_timer[songs[0]]<14400:
                     await ctx.send(f'"{songs[0]}" has already been requested recently by another person. please request another song!')
                     return
@@ -230,7 +231,7 @@ async def event_raw_pubsub(self, message):
     if int(bits_used)>=100:
         
         for songs in songlist:
-            if fuzz.WRatio(sname,songs[0])>fuzzyconfidence:
+            if fuzz.token_set_ratio(sname,songs[0])>fuzzyconfidence:
                 if req_timer.__contains__(songs[0]) and current_time-req_timer[songs[0]]<14400:
                     await message.channel.send(f'"{songs[0]}" has already been requested recently by another person. please request another song!')
                     return
@@ -287,7 +288,7 @@ async def sr(ctx, *song):
 
     current_time = time.time()
 
-    sub = int(ctx.author.tags['subscriber'])
+    sub = int(ctx.author.is_subscriber)
 
     if subscribers.__contains__(ctx.author.name):
         pass
@@ -295,20 +296,24 @@ async def sr(ctx, *song):
         if sub == 1:
             subscribers[ctx.author.name] = 3
         else:
+            mpd.disconnect()
             await ctx.send('Please subscribe to use this feature, subcribers get 3 free song requests daily!')
             return
 
     if subscribers[ctx.author.name]>0:
-        if fuzz.WRatio(song,currentsong)>fuzzyconfidence:
+        if fuzz.token_set_ratio(song,currentsong)>fuzzyconfidence:
+            mpd.disconnect()
             await ctx.send(f'Please request a different song as "{song}" is currently playing!')
             return
-        elif fuzz.WRatio(song,nextsong)>fuzzyconfidence:
+        elif fuzz.token_set_ratio(song,nextsong)>fuzzyconfidence:
+            mpd.disconnect()
             await ctx.send(f'Please request a different song as "{song}" is going to be played next!')
             return
         else:
             for songs in songlist:
-                if fuzz.WRatio(song,songs[0])>fuzzyconfidence:
+                if fuzz.token_set_ratio(song,songs[0])>fuzzyconfidence:
                     if req_timer.__contains__(songs[0]) and current_time-req_timer[songs[0]]<14400:
+                        mpd.disconnect()
                         await ctx.send(f'"{songs[0]}" has already been requested recently by another person. please request another song!')
                         return
                     else:
@@ -338,7 +343,7 @@ async def sr(ctx, *song):
                                 song_reqs[music['id']]= ctx.author.name
                                 latest_reqs[ctx.author.name] = music['id']
 
-                        await ctx.send(f'"{songs[0]}" added to the playlist!')
+                        await ctx.send(f'"{songs[0]}" by {songs[1]} added to the playlist!')
                         mpd.disconnect()
                         return
             mpd.disconnect()
@@ -354,7 +359,7 @@ async def hassong(ctx, song):
     global songlist
 
     for songs in songlist:
-        if fuzz.WRatio(song,songs[0])>fuzzyconfidence:
+        if fuzz.token_set_ratio(song,songs[0])>fuzzyconfidence:
             await ctx.send(f'Match found! {songs[0]} by {songs[1]}')
             return
     else:
@@ -365,7 +370,7 @@ async def hassong(ctx, song):
 async def req(ctx):
     global subscribers
     author = ctx.author.name
-    sub = int(ctx.author.tags['subscriber'])
+    sub = int(ctx.author.is_subscriber)
 
     print(sub)
 
@@ -497,7 +502,7 @@ async def rr(ctx, artist=None):
     pos = int(mpd.status()['nextsongid'])
     nextsong = mpd.playlistid(pos)[0]['title']
 
-    sub = int(ctx.author.tags['subscriber'])
+    sub = int(ctx.author.is_subscriber)
 
     if subscribers.__contains__(ctx.author.name):
         pass
@@ -505,6 +510,7 @@ async def rr(ctx, artist=None):
         if sub == 1:
             subscribers[ctx.author.name] = 3
         else:
+            mpd.disconnect()
             await ctx.send('Please subscribe to use this feature, subcribers get 3 free song requests daily!')
             return
 
@@ -513,7 +519,7 @@ async def rr(ctx, artist=None):
             artistsongs = []
 
             for artists in songlist:
-                if fuzz.WRatio(artist,artists[1])>fuzzyconfidence:
+                if fuzz.token_set_ratio(artist,artists[1])>fuzzyconfidence:
                     artistsongs.append(artists)
 
             #print(artistsongs)
@@ -526,6 +532,7 @@ async def rr(ctx, artist=None):
                 if (req_timer.__contains__(selected[0]) and current_time-req_timer[selected[0]]<14400) or currentsong == selected[0] or nextsong == selected[0]:
                     artistsongs.remove(selected)
                     if not artistsongs:
+                        mpd.disconnect()
                         await ctx.send(f"The artist: {artist} has no other songs which currently do not have cooldown, please select another artist.")
                         return
                     else:
@@ -557,7 +564,7 @@ async def rr(ctx, artist=None):
                         latest_reqs[ctx.author.name] = music['id']
 
                 mpd.disconnect()
-                await ctx.send(f'Added {selected[0]} by {selected[1]} to queue')
+                await ctx.send(f'Added "{selected[0]}" by {selected[1]} to queue')
         else:
             artistsongs = []
 
@@ -714,6 +721,7 @@ async def rr(ctx, genreinput):
 
         elif genreinput == "ALL":
             genre = genreinput
+            mpd.clear()
 
             list1 = [os.path.join(f"{music_path}/Jazz/", file) for file in os.listdir(f"{music_path}/Jazz/")]
             list2 = [os.path.join(f"{music_path}/Chill/", file) for file in os.listdir(f"{music_path}/Chill/")]
@@ -813,7 +821,7 @@ async def when(ctx,song):
             
     for x in range(startindex, len(playlist)):
         print(playlist[x]['title'])
-        if fuzz.WRatio(song, playlist[x]['title'])>fuzzyconfidence:
+        if fuzz.token_set_ratio(song, playlist[x]['title'])>fuzzyconfidence:
             endindex = playlist.index(playlist[x])
             print(endindex)
             sname = playlist[x]['title']
