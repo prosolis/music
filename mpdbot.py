@@ -3,7 +3,9 @@ import sys
 import musicpd
 from decouple import config
 from numpy.core.records import recarray
+import twitchio
 from twitchio.ext import commands
+from twitchio.ext import pubsub
 import requests
 import os
 from tinytag import TinyTag
@@ -20,13 +22,128 @@ import csv
 
 
 # Sets up the bot from env
-bot = commands.Bot(
-    irc_token= config('TMI_TOKEN'),
-    client_id= config('BEARER_ID'),
-    nick= config('BOT_NICK'),
-    prefix=config('BOT_PREFIX'),
-    initial_channels=[config('CHANNEL')]
-)
+#bot = commands.Bot(
+#    irc_token= config('TMI_TOKEN'),
+#    client_id= config('BEARER_ID'),
+#    nick= config('BOT_NICK'),
+#    prefix=config('BOT_PREFIX'),
+#    initial_channels=[config('CHANNEL')] )
+
+class Bot(commands.Bot):
+
+    def __init__(self):
+        super().__init__(token=config('TMI_TOKEN'), prefix=config('BOT_PREFIX'), initial_channels=[config('CHANNEL')])
+        
+    async def event_ready(self):
+        print(f'Logged in as | {self.nick}')
+        
+    async def event_message(self, ctx):
+        # Runs every time a message is sent in chat.
+        global mpd, songlist, music_path, fuzzyconfidence, twitch, reqpos, played, gflag
+        
+        # make sure the bot ignores itself and the streamer
+        if ctx.author.name.lower() == config('BOT_NICK').lower():
+            return
+
+        # Prints chat in terminal
+        print(ctx.content)
+        #print(ctx.raw_data)
+
+        if gflag== True:
+            mpd.connect()
+            
+            currentsong = mpd.currentsong()['title']
+            currentartist = mpd.currentsong()['artist']
+            pos = int(mpd.status()['nextsongid'])
+            nextsong = mpd.playlistid(pos)[0]['title']
+            nextartist = mpd.playlistid(pos)[0]['artist']
+            currentid = mpd.currentsong()['id']
+
+            if currentid not in played:            
+                if song_reqs.__contains__(currentid):
+                    await ctx.channel.send(f'Now Playing: {currentartist} - {currentsong} requested by {song_reqs[currentid]}')
+                else:
+                    await ctx.channel.send(f'Now Playing: {currentartist} - {currentsong}')
+
+                if twitch.__contains__(currentartist):
+                    await ctx.channel.send(f'{twitch[currentartist]}')
+
+                file1 = open("song_artist.txt","w")
+                file1.write(currentartist)
+                file1.close()
+
+                file2 = open("song_title.txt","w")
+                file2.write(currentsong)
+                file2.close()
+
+                file3 = open("song_artist_next.txt","w")
+                file3.write(nextartist)
+                file3.close()
+
+                file4 = open("song_title_next.txt","w")
+                file4.write(nextsong)
+                file4.close()
+                played.append(currentid)
+
+            mpd.disconnect()
+                
+        #CHANNEL POINTS SONG REQUEST
+        if "custom-reward-id=9853b03b-4795-4fbf-85e0-631ebd5a93c7" in ctx.raw_data:
+            mpd.connect()
+            data = ctx.raw_data
+            sname = data.split(":")[-1]
+            
+            s_song = ""
+
+            flag = False
+
+            current_time = time.time()
+
+            for songs in songlist:
+                if fuzz.token_set_ratio(sname,songs[0])>fuzzyconfidence:
+                    if req_timer.__contains__(songs[0]) and current_time-req_timer[songs[0]]<14400:
+                        await ctx.send(f'"{songs[0]}" has already been requested recently by another person. please request another song!')
+                        return
+                    else:
+                        s_song = songs[0]
+                        print(s_song)
+                        location = songs[3]
+                        
+
+                        cpos = int(mpd.currentsong()['pos'])
+                        song_info = mpd.playlistsearch('file', location)
+                        song_id = song_info[0]['id']
+                        
+                        if cpos > reqpos:
+                            mpd.moveid(song_id, cpos+1)
+                            reqpos = cpos+1
+                            flag = True
+                        else:
+                            mpd.moveid(song_id,reqpos+1)
+                            reqpos += 1
+                            flag = True
+
+                        playlist = mpd.playlistid()
+
+                        req_dict[songs[0]] += 1
+
+                        req_timer[songs[0]] = current_time
+
+                        for music in playlist:
+                            if int(music['pos']) == reqpos:
+                                song_reqs[music['id']]= ctx.author.name
+                                latest_reqs[ctx.author.name] = music['id']
+
+            if flag==True:
+                await ctx.channel.send(f'"{s_song}" added to the playlist!')
+            else:
+                await ctx.channel.send(f'No match found for "{sname}"') 
+            mpd.disconnect()
+
+        # Handles bot commands
+        await self.handle_commands(ctx)
+            
+bot = Bot()    
 
 mpd = musicpd.MPDClient()
 mpd.socket_timeout = 10
@@ -37,7 +154,6 @@ print(f'MPD Version == {mpd.mpd_version}')
 mpd.repeat(1)
 #mpd.random(1)
 mpd.crossfade(10)
-#mpd.setvol(100)
 mpd.disconnect()
 
 df = pd.read_csv('requests.csv')
@@ -92,119 +208,13 @@ reqpos = 0 #last pos where sr went to
 
 gflag = False
 
-@bot.event
-async def event_ready():
-    # Runs when bot connects to channel
-    print(f"{config('BOT_NICK')} is online! at http://twitch.tv/{config('CHANNEL')}")
-    ws = bot._ws  # this is only needed to send messages within event_ready
-    await ws.send_privmsg(config('CHANNEL'), f"/me I'm back!") # Sends intro message
+#@bot.event
+#async def event_ready():
+#    # Runs when bot connects to channel
+#    print(f"{config('BOT_NICK')} is online! at http://twitch.tv/{config('CHANNEL')}")
+#    ws = bot._ws  # this is only needed to send messages within event_ready
+#    await ws.send_privmsg(config('CHANNEL'), f"/me I'm back!") # Sends intro message
 
-@bot.event
-async def event_message(ctx):
-    # Runs every time a message is sent in chat.
-    global mpd, songlist, music_path, fuzzyconfidence, twitch, reqpos, played, gflag
-    
-    # make sure the bot ignores itself and the streamer
-    if ctx.author.name.lower() == config('BOT_NICK').lower():
-        return
-
-    # Prints chat in terminal
-    print(f"{ctx.author.name}: {ctx.content}")
-    #print(ctx.raw_data)
-
-    if gflag== True:
-        mpd.connect()
-        
-        currentsong = mpd.currentsong()['title']
-        currentartist = mpd.currentsong()['artist']
-        pos = int(mpd.status()['nextsongid'])
-        nextsong = mpd.playlistid(pos)[0]['title']
-        nextartist = mpd.playlistid(pos)[0]['artist']
-        currentid = mpd.currentsong()['id']
-
-        if currentid not in played:            
-            if song_reqs.__contains__(currentid):
-                await ctx.channel.send(f'Now Playing: {currentartist} - {currentsong} requested by {song_reqs[currentid]}')
-            else:
-                await ctx.channel.send(f'Now Playing: {currentartist} - {currentsong}')
-
-            if twitch.__contains__(currentartist):
-                await ctx.channel.send(f'{twitch[currentartist]}')
-
-            file1 = open("song_artist.txt","w")
-            file1.write(currentartist)
-            file1.close()
-
-            file2 = open("song_title.txt","w")
-            file2.write(currentsong)
-            file2.close()
-
-            file3 = open("song_artist_next.txt","w")
-            file3.write(nextartist)
-            file3.close()
-
-            file4 = open("song_title_next.txt","w")
-            file4.write(nextsong)
-            file4.close()
-            played.append(currentid)
-
-        mpd.disconnect()
-            
-    #CHANNEL POINTS SONG REQUEST
-    if "custom-reward-id=9853b03b-4795-4fbf-85e0-631ebd5a93c7" in ctx.raw_data:
-        mpd.connect()
-        data = ctx.raw_data
-        sname = data.split(":")[-1]
-        
-        s_song = ""
-
-        flag = False
-
-        current_time = time.time()
-
-        for songs in songlist:
-            if fuzz.token_set_ratio(sname,songs[0])>fuzzyconfidence:
-                if req_timer.__contains__(songs[0]) and current_time-req_timer[songs[0]]<14400:
-                    await ctx.send(f'"{songs[0]}" has already been requested recently by another person. please request another song!')
-                    return
-                else:
-                    s_song = songs[0]
-                    print(s_song)
-                    location = songs[3]
-                    
-
-                    cpos = int(mpd.currentsong()['pos'])
-                    song_info = mpd.playlistsearch('file', location)
-                    song_id = song_info[0]['id']
-                    
-                    if cpos > reqpos:
-                        mpd.moveid(song_id, cpos+1)
-                        reqpos = cpos+1
-                        flag = True
-                    else:
-                        mpd.moveid(song_id,reqpos+1)
-                        reqpos += 1
-                        flag = True
-
-                    playlist = mpd.playlistid()
-
-                    req_dict[songs[0]] += 1
-
-                    req_timer[songs[0]] = current_time
-
-                    for music in playlist:
-                        if int(music['pos']) == reqpos:
-                            song_reqs[music['id']]= ctx.author.name
-                            latest_reqs[ctx.author.name] = music['id']
-
-        if flag==True:
-            await ctx.channel.send(f'"{s_song}" added to the playlist!')
-        else:
-            await ctx.channel.send(f'No match found for "{sname}"') 
-        mpd.disconnect()
-
-    # Handles bot commands
-    await bot.handle_commands(ctx)
 
 @bot.event
 async def event_raw_pubsub(self, message):
