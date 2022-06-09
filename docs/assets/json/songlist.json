@@ -348,22 +348,112 @@
   "duration":"04:11"
  },
  {
-  "title":"The Rush",
+  "title":"Little Stirrup Cay",
   "artist":"CalvinThomasMusic",
   "genre":"Twitch Original",
-  "duration":"04:40"
+  "duration":"05:08"
  },
  {
-  "title":"A Better Day",
+  "title":"Universal",
   "artist":"CalvinThomasMusic",
   "genre":"Twitch Original",
-  "duration":"05:06"
+  "duration":"04:26"
  },
  {
   "title":"Crescent Moon",
   "artist":"CalvinThomasMusic",
   "genre":"Twitch Original",
-  "duration":"05:42"
+  "duration":"05:50"
+ },
+ {
+  "title":"Open Up To Me",
+  "artist":"CalvinThomasMusic",
+  "genre":"Twitch Original",
+  "duration":"06:23"
+ },
+ {
+  "title":"Skylights",
+  "artist":"CalvinThomasMusic",
+  "genre":"Twitch Original",
+  "duration":"05:19"
+ },
+ {
+  "title":"Meet Again",
+  "artist":"CalvinThomasMusic",
+  "genre":"Twitch Original",
+  "duration":"04:11"
+ },
+ {
+  "title":"Memories",
+  "artist":"CalvinThomasMusic",
+  "genre":"Twitch Original",
+  "duration":"04:35"
+ },
+ {
+  "title":"Wooden House",
+  "artist":"CalvinThomasMusic",
+  "genre":"Twitch Original",
+  "duration":"04:41"
+ },
+ {
+  "title":"Tomorrow [Piano Version]",
+  "artist":"CalvinThomasMusic",
+  "genre":"Twitch Original",
+  "duration":"04:37"
+ },
+ {
+  "title":"A Better Day [Piano Version]",
+  "artist":"CalvinThomasMusic",
+  "genre":"Twitch Original",
+  "duration":"07:39"
+ },
+ {
+  "title":"Scars of Her Love",
+  "artist":"CalvinThomasMusic",
+  "genre":"Twitch Original",
+  "duration":"04:10"
+ },
+ {
+  "title":"Now I Dine In Hell",
+  "artist":"CalvinThomasMusic",
+  "genre":"Twitch Original",
+  "duration":"06:05"
+ },
+ {
+  "title":"Legacy",
+  "artist":"CalvinThomasMusic",
+  "genre":"Twitch Original",
+  "duration":"06:17"
+ },
+ {
+  "title":"Morning Sun",
+  "artist":"CalvinThomasMusic",
+  "genre":"Twitch Original",
+  "duration":"04:33"
+ },
+ {
+  "title":"Together",
+  "artist":"CalvinThomasMusic",
+  "genre":"Twitch Original",
+  "duration":"05:20"
+ },
+ {
+  "title":"What It Means To Love",
+  "artist":"CalvinThomasMusic",
+  "genre":"Twitch Original",
+  "duration":"04:47"
+ },
+ {
+  "title":"The Rush",
+  "artist":"CalvinThomasMusic",
+  "genre":"Twitch Original",
+  "duration":"07:23"
+ },
+ {
+  "title":"If I Ever Fall",
+  "artist":"CalvinThomasMusic",
+  "genre":"Twitch Original",
+  "duration":"03:44"
  },
  {
   "title":"Amber",
@@ -1422,6 +1512,30 @@
   "duration":"03:05"
  },
  {
+  "title":"Batman NES Stage 3",
+  "artist":"NEScello",
+  "genre":"Twitch Cover",
+  "duration":"02:13"
+ },
+ {
+  "title":"Batman NES Stage 1",
+  "artist":"NEScello",
+  "genre":"Twitch Cover",
+  "duration":"03:08"
+ },
+ {
+  "title":"Batman NES Stage 2",
+  "artist":"NEScello",
+  "genre":"Twitch Cover",
+  "duration":"02:06"
+ },
+ {
+  "title":"Dragon Warrior 1 Complete OST",
+  "artist":"NEScello",
+  "genre":"Twitch Cover",
+  "duration":"09:32"
+ },
+ {
   "title":"I Have Nothing To Say",
   "artist":"RachelGraceViolin",
   "genre":"Twitch Original",
@@ -1446,7 +1560,7 @@
   "duration":"02:34"
  },
  {
-  "title":"Balada Veraze InProg2 L2",
+  "title":"Balada Veraze",
   "artist":"RachelGraceViolin",
   "genre":null,
   "duration":"04:13"
@@ -1470,6 +1584,12 @@
   "duration":"03:40"
  },
  {
+  "title":"Nascence",
+  "artist":"RachelGraceViolin",
+  "genre":"Twitch Original",
+  "duration":"02:11"
+ },
+ {
   "title":"Renge",
   "artist":"RachelGraceViolin",
   "genre":"Dance",
@@ -1482,7 +1602,13 @@
   "duration":"03:14"
  },
  {
-  "title":"Forget Me Not (Mix 3)",
+  "title":"Rising Up - (Streets of Rage 4)",
+  "artist":"RachelGraceViolin",
+  "genre":null,
+  "duration":"03:15"
+ },
+ {
+  "title":"Forget Me Not",
   "artist":"RachelGraceViolin",
   "genre":"Twitch Original",
   "duration":"04:11"
@@ -1542,6 +1668,12 @@
   "duration":"04:03"
  },
  {
+  "title":"Kitties for Christmas",
+  "artist":"Regular_Human_Music",
+  "genre":"Twitch Original",
+  "duration":"06:26"
+ },
+ {
   "title":"Sad Rollercoaster in Spring",
   "artist":"Regular_Human_Music",
   "genre":"Twitch Original",
@@ -1570,12 +1702,6 @@
   "artist":"RobKovacs",
   "genre":"Twitch Original",
   "duration":"06:38"
- },
- {
-  "title":"Interlude",
-  "artist":"RobKovacs",
-  "genre":"Twitch Original",
-  "duration":"01:54"
  },
  {
   "title":"Here in the Future",
@@ -1666,6 +1792,24 @@
   "artist":"RayMusica",
   "genre":"Twitch Cover",
   "duration":"04:57"
+ },
+ {
+  "title":"Feelin Life",
+  "artist":"SunnySaysMusic",
+  "genre":"Twitch Original",
+  "duration":"01:35"
+ },
+ {
+  "title":"S.U.N.N.Y",
+  "artist":"SunnySaysMusic",
+  "genre":"Twitch Original",
+  "duration":"02:14"
+ },
+ {
+  "title":"Hello.. Goodbye",
+  "artist":"SunnySaysMusic",
+  "genre":"Twitch Original",
+  "duration":"02:06"
  },
  {
   "title":"Promise",
@@ -1764,7 +1908,7 @@
   "duration":"04:48"
  },
  {
-  "title":"VY1",
+  "title":"Voyager 1",
   "artist":"ArCaJazz",
   "genre":"Twitch Original",
   "duration":"03:08"
