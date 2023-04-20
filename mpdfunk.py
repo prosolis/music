@@ -2,10 +2,10 @@
 #import os
 from mpd import MPDClient
 
-#def mpdconnectionclose():
-#    """Close network connection to MPD"""
-#    client.close()
-#    client.disconnect()
+def mpdconnectionclose():
+    """Close network connection to MPD"""
+    client.close()
+    client.disconnect()
 
 def mpdsonginfo(client):
     """Fetch the current song's title, artist, and fingerprint"""
@@ -49,13 +49,10 @@ def main():
     client.timeout = 999 #set network timeout
     client.idletimeout = None #timeout for fetching the result of the idle command
     client.connect("localhost", 6600) #6600 is the default MPD port
-    #print("Hello World!")
-    #mpdconnectionopen()
     title, artist, fingerprint = mpdsonginfo(client)
     print(title, artist, fingerprint)
     nexttitle, nextartist = mpdnextsonginfo(client)
     print(nexttitle, nextartist)
-   # print(mpdPlayListInfo())
     print(mpdfetchsongfingerprint(client))
     mpdalbumart(client)
 
