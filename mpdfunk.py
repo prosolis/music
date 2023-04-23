@@ -1,8 +1,7 @@
 """python-mpd2 library"""
-#import os
 from mpd import MPDClient
 
-def mpdconnectionclose():
+def mpdconnectionclose(client):
     """Close network connection to MPD"""
     client.close()
     client.disconnect()
@@ -16,12 +15,12 @@ def mpdsonginfo(client):
 
 def mpdalbumart(client):
     """Dump the album art to disk"""
-    file_open = open("cover.jpg", "wb")
-    songimagedict = client.readpicture(client.currentsong()['file'])
-    songimage = songimagedict["binary"]
-    songimage_bytearray = bytearray(songimage)
-    file_open.write(songimage_bytearray)
-    file_open.close()
+    with open("cover.jpg", "wb") as file_open:
+        songimagedict = client.readpicture(client.currentsong()['file'])
+        songimage = songimagedict["binary"]
+        songimage_bytearray = bytearray(songimage)
+        file_open.write(songimage_bytearray)
+        file_open.close()
 
 
 def mpdplaylistinfo(client):
@@ -49,12 +48,11 @@ def main():
     client.timeout = 999 #set network timeout
     client.idletimeout = None #timeout for fetching the result of the idle command
     client.connect("localhost", 6600) #6600 is the default MPD port
-    title, artist, fingerprint = mpdsonginfo(client)
-    print(title, artist, fingerprint)
-    nexttitle, nextartist = mpdnextsonginfo(client)
-    print(nexttitle, nextartist)
-    print(mpdfetchsongfingerprint(client))
-    mpdalbumart(client)
+#    title, artist, fingerprint = mpdsonginfo(client)
+#    print(title, artist, fingerprint)
+#    nexttitle, nextartist = mpdnextsonginfo(client)
+#    print(nexttitle, nextartist)
+#    print(mpdfetchsongfingerprint(client))
 
 if __name__ == "__main__":
     main()
