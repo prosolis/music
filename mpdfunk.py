@@ -1,19 +1,26 @@
-"""python-mpd2 library"""
+"""mpdfunk provides basic connectivity and song information from a locally running MPD instance"""
 from mpd import MPDClient
+import logging
 
-def mpdconnectionclose(client):
+log_format = '%(asctime)s %(message)s'
+log_level = 10
+logging.basicConfig(format=log_format,level=log_level)
+logger = logging.getLogger('MPDProBot')
+logger.info("MPD Bot has started")
+
+def mpd_connection_close(client):
     """Close network connection to MPD"""
     client.close()
     client.disconnect()
 
-def mpdsonginfo(client):
+def mpd_song_info(client):
     """Fetch the current song's title, artist, and fingerprint"""
     title = client.currentsong()['title']
     artist = client.currentsong()['artist']
     fingerprint = client.readcomments(client.currentsong()['file'])['acoustid_fingerprint']
     return title,artist,fingerprint
 
-def mpdalbumart(client):
+def mpd_album_art(client):
     """Dump the album art to disk"""
     with open("cover.jpg", "wb") as file_open:
         songimagedict = client.readpicture(client.currentsong()['file'])
@@ -23,21 +30,21 @@ def mpdalbumart(client):
         file_open.close()
 
 
-def mpdplaylistinfo(client):
+def mpd_playlist_info(client):
     """Return the MPD playlist"""
     return client.playlist()
 
-def mpdnextsonginfo(client):
+def mpd_next_song_info(client):
     """Pull the next song's artist and title"""
     artist = client.playlistid(client.status()['nextsongid'])[0]['artist']
     title = client.playlistid(client.status()['nextsongid'])[0]['title']
     return title, artist
 
-def mpdfetchcurrentsongid(client):
+def mpd_fetch_current_song_id(client):
     """Pull the current song ID"""
     return client.currentsong()['id']
 
-def mpdfetchsongfingerprint(client):
+def mpd_fetch_song_fingerprint(client):
     """Fetch current song acoustic fingerprint"""
     return client.readcomments(client.currentsong()['file'])['acoustid_fingerprint']
 
@@ -48,11 +55,7 @@ def main():
     client.timeout = 999 #set network timeout
     client.idletimeout = None #timeout for fetching the result of the idle command
     client.connect("localhost", 6600) #6600 is the default MPD port
-#    title, artist, fingerprint = mpdsonginfo(client)
-#    print(title, artist, fingerprint)
-#    nexttitle, nextartist = mpdnextsonginfo(client)
-#    print(nexttitle, nextartist)
-#    print(mpdfetchsongfingerprint(client))
+
 
 if __name__ == "__main__":
     main()
