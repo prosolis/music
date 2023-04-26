@@ -1,7 +1,7 @@
+##Development Environment
 lib/
 pyvenv.cfg
 lib64
 bin/
-
-## To updating env file make sure to add new examples to the repo but NEVER add real values to main
 .env
+*.json
