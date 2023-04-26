@@ -1,4 +1,4 @@
-"""Module providing logging for development and debugging"""
+"""Modules for interacting with the liveChatMessages api"""
 import logging
 import asyncio
 

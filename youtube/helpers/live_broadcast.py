@@ -1,9 +1,9 @@
-"""Module providing logging for development and debugging"""
+"""Modules for interacting with the liveBroadcasts api"""
 import logging
 import numpy as np
 
 async def get_live_chatid(youtube):
-    """Get ChatId from youtube live broadcasts api"""
+    """Get ChatId from youtube liveBroadcasts api"""
     logger = logging.getLogger('YoutubeProBot')
 
     try:

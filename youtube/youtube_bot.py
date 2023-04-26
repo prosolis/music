@@ -1,4 +1,4 @@
-"""Module providing logging for development and debugging"""
+"""Youtube bot will run continously after going live via youtube"""
 import logging
 import asyncio
 
