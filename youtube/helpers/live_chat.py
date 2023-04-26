@@ -2,9 +2,10 @@
 import logging
 import asyncio
 
+TEST_COMMAND_STRING = "!test"
+
 async def get_live_chat_messages(youtube, live_chatid):
     """Get Youtube Live Chat Messages"""
-
     logger = logging.getLogger('YoutubeProBot')
 
     try:
@@ -43,30 +44,19 @@ async def get_live_chat_messages(youtube, live_chatid):
 
 async def discover_command_requests(youtube, response, live_chatid):
     """Discover any commands passed into live chat"""
+    logger = logging.getLogger('YoutubeProBot')
 
     for items in response["items"]:
         text_message = items["snippet"]["textMessageDetails"]["messageText"]
         is_chat_owner = items["authorDetails"]["isChatOwner"]
-        #is_chat_moderator = items["authorDetails"]["isChatModerator"]
-        author_id = items["authorDetails"]["channelId"]
+        is_chat_moderator = items["authorDetails"]["isChatModerator"]
 
-        has_elevated_permission = bool(is_chat_owner)
+        if text_message == TEST_COMMAND_STRING and (is_chat_owner or is_chat_moderator):
+            logger.debug("Found test command")
+            await respond_test_command(youtube, live_chatid)
 
-        await route_command(youtube, live_chatid, author_id, has_elevated_permission, text_message)
-
-async def route_command(youtube, live_chatid, author_id, has_elevated_permission, text_message):
-    """Route in coming command to correct module"""
-
-    logger = logging.getLogger('YoutubeProBot')
-
-    test_command_string = "!test"
-
-    if text_message == test_command_string and has_elevated_permission:
-        logger.debug("Found test command")
-        await test_command(youtube, live_chatid)
-
-async def test_command(youtube, live_chatid):
-    """Logic for test command, returns message for youtube to send to """
+async def respond_test_command(youtube, live_chatid):
+    """Logic for test command, returns test message back to youtube live chat"""
     logger = logging.getLogger('YoutubeProBot')
 
     try:

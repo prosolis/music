@@ -10,7 +10,6 @@ from helpers import live_broadcast, live_chat
 
 async def main():
     """Intializes Radio Proslis Bot for Youtube."""
-
     log_format = '%(asctime)s %(message)s'
     log_level = 10
 
