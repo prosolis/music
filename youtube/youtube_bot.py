@@ -17,7 +17,8 @@ async def main():
     logger = logging.getLogger('YoutubeProBot')
     logger.info("YouTube Bot has started")
 
-    scopes = ["https://www.googleapis.com/auth/youtube.readonly", "https://www.googleapis.com/auth/youtube.force-ssl"]
+    scopes = ["https://www.googleapis.com/auth/youtube.readonly",
+              "https://www.googleapis.com/auth/youtube.force-ssl"]
 
     # TODO(camcast): Use dotenv here instead of clear text.
     api_service_name = "youtube"
