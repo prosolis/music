@@ -1,4 +1,9 @@
+##Development Environment
 lib/
 pyvenv.cfg
 lib64
 bin/
+.env
+client_secrets.json
+*.json
+**/__pycache__/

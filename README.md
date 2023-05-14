@@ -12,4 +12,4 @@
 
 5. Setup System Environment Variables - in the process of moving to dotenv module
 
-6. Validate you can execute mpdbot.py
+6. Validate you can execute python code
