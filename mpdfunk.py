@@ -2,11 +2,6 @@
 from mpd import MPDClient
 import logging
 
-log_format = '%(asctime)s %(message)s'
-log_level = 10
-logging.basicConfig(format=log_format,level=log_level)
-logger = logging.getLogger('MPDProBot')
-logger.info("MPD Bot has started")
 
 def mpd_connection_close(client):
     """Close network connection to MPD"""
@@ -51,6 +46,12 @@ def mpd_fetch_song_fingerprint(client):
 
 def main():
     """Bot code"""
+    log_format = '%(asctime)s %(message)s'
+    log_level = 10
+    logging.basicConfig(format=log_format,level=log_level)
+    logger = logging.getLogger('MPDProBot')
+    logger.info("MPD Bot has started")
+
     client = MPDClient()
     client.timeout = 999 #set network timeout
     client.idletimeout = None #timeout for fetching the result of the idle command
