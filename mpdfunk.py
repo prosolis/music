@@ -1,7 +1,6 @@
 """mpdfunk provides basic connectivity and song information from a locally running MPD instance"""
-from mpd import MPDClient
 import logging
-
+from mpd import MPDClient
 
 def mpd_connection_close(client):
     """Close network connection to MPD"""
