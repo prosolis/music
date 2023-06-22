@@ -3,6 +3,7 @@
 import logging
 from mpd import MPDClient, MPDError
 
+# TODO(camcast): Need to run this code with close to prod environment to fully valdiate
 
 class MPDProxy:
     """Class representing proxy connection to MPD"""
