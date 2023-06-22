@@ -3,12 +3,14 @@
 import logging
 from mpd import MPDClient, MPDError
 
+
 class MPDProxy:
     """Class representing proxy connection to MPD"""
-    async def __init__(self, host="localhost", port="6600", timeout=999):
+
+    def __init__(self, host="localhost", port="6600", timeout=999):
         log_format = '%(asctime)s %(message)s'
         log_level = 10
-        logging.basicConfig(format=log_format,level=log_level)
+        logging.basicConfig(format=log_format, level=log_level)
         logger = logging.getLogger('MPDProxy')
 
         self._client = MPDClient()
@@ -17,7 +19,7 @@ class MPDProxy:
 
         self._client.timeout = timeout
         self.mpd_connection_open()
-        logger.info("MPD Proxy initalized")
+        logger.info("MPD Proxy initialized")
 
     async def mpd_connection_open(self):
         """Sets up connect to MPD"""
@@ -43,7 +45,7 @@ class MPDProxy:
         artist = self._client.currentsong()['artist']
         fingerprint = self._client.readcomments(
             self._client.currentsong()['file'])['acoustid_fingerprint']
-        return title,artist,fingerprint
+        return title, artist, fingerprint
 
     async def mpd_album_art(self):
         """Dump the album art to disk"""
@@ -56,25 +58,27 @@ class MPDProxy:
                 file_open.write(songimage_bytearray)
                 file_open.close()
         except OSError as oserror:
-            logger.error("Could not open %s cover.png: %s", 
+            logger.error("Could not open %s cover.png: %s",
                          self._client.currentsong()['title'], oserror)
 
-def mpd_playlist_info(client):
-    """Return the MPD playlist"""
-    return client.playlist()
+    async def mpd_playlist_info(self):
+        """Return the current MPD playlist"""
+        return self._client.playlist()
 
-def mpd_next_song_info(client):
-    """Pull the next song's artist and title"""
-    artist = client.playlistid(client.status()['nextsongid'])[0]['artist']
-    title = client.playlistid(client.status()['nextsongid'])[0]['title']
-    return title, artist
+    async def mpd_next_song_info(self):
+        """Fetch the next song's artist and title"""
+        artist = self._client.playlistid(self._client.status()['nextsongid'])[0]['artist']
+        title = self._client.playlistid(self._client.status()['nextsongid'])[0]['title']
+        return title, artist
 
-def mpd_fetch_current_song_id(client):
-    """Pull the current song ID"""
-    return client.currentsong()['id']
+    async def mpd_fetch_current_song_id(self):
+        """Fetch the current song ID"""
+        return self._client.currentsong()['id']
 
-def mpd_fetch_song_fingerprint(client):
-    """Fetch current song acoustic fingerprint"""
-    return client.readcomments(client.currentsong()['file'])['acoustid_fingerprint']
+    async def mpd_fetch_song_fingerprint(self):
+        """Fetch current song acoustic fingerprint"""
+        return self._client.readcomments(self._client.currentsong()['file'])['acoustid_fingerprint']
+
 
 mpdproxy = MPDProxy()
+mpdproxy.mpd_album_art()
