@@ -79,12 +79,3 @@ class MPDProxy:
     async def mpd_fetch_song_fingerprint(self):
         """Fetch current song acoustic fingerprint"""
         return self._client.readcomments(self._client.currentsong()['file'])['acoustid_fingerprint']
-
-##Use for testing
-#async def main():
-#    """Main Function"""
-#    mpdproxy = MPDProxy()
-#    await mpdproxy.mpd_song_info()
-
-#if __name__ == "__main__":
-#    asyncio.run(main())
