@@ -21,8 +21,8 @@ class MPDProxy:
         self.mpd_connection_open()
         logger.info("MPD Proxy initialized")
 
-    async def mpd_connection_open(self):
-        """Sets up connect to MPD"""
+    def mpd_connection_open(self):
+        """Open network connection to MPD"""
         logger = logging.getLogger('MPDProxy')
         try:
             self._client.connect(self._host, self._port)
@@ -34,7 +34,7 @@ class MPDProxy:
 
     async def mpd_connection_close(self):
         """Close network connection to MPD"""
-        logger = logging.getLogger('MPDProBot')
+        logger = logging.getLogger('MPDProxy')
         self._client.close()
         self._client.disconnect()
         logger.warning("MPD localhost has been manually disconnected")
@@ -49,7 +49,7 @@ class MPDProxy:
 
     async def mpd_album_art(self):
         """Dump the album art to disk"""
-        logger = logging.getLogger('MPDProBot')
+        logger = logging.getLogger('MPDProxy')
         try:
             with open("cover.jpg", "wb") as file_open:
                 songimagedict = self._client.readpicture(self._client.currentsong()['file'])
@@ -69,7 +69,7 @@ class MPDProxy:
         """Fetch the next song's artist and title"""
         artist = self._client.playlistid(self._client.status()['nextsongid'])[0]['artist']
         title = self._client.playlistid(self._client.status()['nextsongid'])[0]['title']
-        return title, artist
+        return artist, title
 
     async def mpd_fetch_current_song_id(self):
         """Fetch the current song ID"""
@@ -79,6 +79,11 @@ class MPDProxy:
         """Fetch current song acoustic fingerprint"""
         return self._client.readcomments(self._client.currentsong()['file'])['acoustid_fingerprint']
 
+##Use for testing
+#async def main():
+#    """Main Function"""
+#    mpdproxy = MPDProxy()
+#    await mpdproxy.mpd_song_info()
 
-mpdproxy = MPDProxy()
-mpdproxy.mpd_album_art()
+#if __name__ == "__main__":
+#    asyncio.run(main())
