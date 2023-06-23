@@ -2,8 +2,9 @@
 import logging
 import numpy as np
 
+
 async def get_live_chatid(youtube):
-    """Get ChatId from youtube liveBroadcasts api"""
+    """Get ChatId from bots liveBroadcasts api"""
     logger = logging.getLogger('YoutubeProBot')
 
     try:
