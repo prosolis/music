@@ -5,7 +5,6 @@ from mpd import MPDClient, MPDError
 
 class MPDProxy:
     """Class representing proxy connection to MPD"""
-
     def __init__(self, host="localhost", port="6600", timeout=999):
         log_format = '%(asctime)s %(message)s'
         log_level = 10

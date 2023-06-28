@@ -7,3 +7,6 @@ bin/
 client_secrets.json
 *.json
 **/__pycache__/
+test_music/
+*.mp3
+*.flac

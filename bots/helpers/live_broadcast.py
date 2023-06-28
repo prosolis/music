@@ -1,10 +1,12 @@
 """Modules for interacting with the liveBroadcasts api"""
 import logging
+import requests
 import numpy as np
 
+
 async def get_live_chatid(youtube):
-    """Get ChatId from youtube liveBroadcasts api"""
-    logger = logging.getLogger('YoutubeProBot')
+    """Get ChatId from bots liveBroadcasts api"""
+    logger = logging.getLogger('YoutubeBot')
 
     try:
         request = youtube.liveBroadcasts().list(
@@ -23,7 +25,7 @@ async def get_live_chatid(youtube):
 
         live_chatid = response["items"][0]["snippet"]["liveChatId"]
 
-    except request.HTTPError as request_httperror:
+    except requests.exceptions.HTTPError as request_httperror:
         logger.error(str(request_httperror))
         return None
 
