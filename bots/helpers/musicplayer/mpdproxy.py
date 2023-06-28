@@ -3,7 +3,6 @@
 import logging
 from mpd import MPDClient, MPDError
 
-
 class MPDProxy:
     """Class representing proxy connection to MPD"""
     def __init__(self, host="localhost", port="6600", timeout=999):
