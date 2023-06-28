@@ -1,11 +1,12 @@
 """Modules for interacting with the liveChatMessages api"""
+# pylint: disable=too-many-arguments
 import asyncio
 import logging
 import os
+import requests
 from dotenv import load_dotenv
-from musicplayer import mpdproxy
-from postgres import postgresproxy
-
+from helpers.musicplayer import mpdproxy
+from helpers.postgres import postgresproxy
 
 async def get_live_chat_messages(youtube, live_chatid):
     """Get YouTube Live Chat Messages"""
@@ -41,7 +42,7 @@ async def get_live_chat_messages(youtube, live_chatid):
             wait_time = response["pollingIntervalMillis"]/1000
             await asyncio.sleep(wait_time)
 
-    except request.HTTPError as request_httperror:
+    except requests.exceptions.HTTPError as request_httperror:
         logger.error(str(request_httperror))
         return
 
@@ -89,22 +90,47 @@ async def respond_test_command(youtube, live_chatid):
         print(response)
         logger.debug("Sent test command response to live stream")
 
-    except request.HTTPError as request_httperror:
+    except requests.exceptions.HTTPError as request_httperror:
         logger.error(str(request_httperror))
 
 
 async def respond_like_command(youtube, live_chatid, author_id):
     """Logic for test command, returns test message back to bots live chat"""
-    # logger = logging.getLogger('YoutubeBot')
+    logger = logging.getLogger('YoutubeBot')
 
     mpd = mpdproxy.MPDProxy()
     title, artist, fingerprint = await mpd.mpd_song_info()
 
-    load_dotenv()
-    user = os.getenv("POSTGRES_USER")
-    password = os.getenv("POSTGRES_PASSWORD")
-    platform_name = 'YouTube'
-    database = postgresproxy.PostgresProxy(user, password)
-    await database.insert_song_likes(title, artist, author_id, platform_name, fingerprint)
+    #TODO(camcast): Need to figure out if these items are worth returning
+    print(title, artist)
 
-    print(youtube, live_chatid)
+    load_dotenv()
+    platform_name = 'Youtube'
+    postgres = postgresproxy.PostgresProxy(
+        user=os.getenv("POSTGRES_USER"), password=os.getenv("POSTGRES_PASSWORD"))
+    await postgres.song_likes_command(author_id, platform_name, fingerprint)
+
+    await mpd.mpd_connection_close()
+    await postgres.postgres_connection_close()
+
+    message = "Thanks this data will help us contiune bringing the best music to Radio Prosolis"
+
+    try:
+        request = youtube.liveChatMessages().insert(
+            part="snippet",
+            body={
+                "snippet": {
+                    "liveChatId": live_chatid,
+                    "type": "textMessageEvent",
+                    "textMessageDetails": {
+                        "messageText": message
+                    }
+                }
+            }
+        )
+        response = request.execute()
+        print(response)
+        logger.debug("Sent like command response to live stream")
+
+    except requests.exceptions.HTTPError as request_httperror:
+        logger.error(str(request_httperror))
