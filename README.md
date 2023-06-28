@@ -1,4 +1,4 @@
-# Radio Prosolis
+# Prosolis Radio
 
 ## Setting up Dev environment on Debian
 
