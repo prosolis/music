@@ -81,6 +81,26 @@ class PostgresProxy:
 
         cursor.close()
 
+    async def artist_info_command(self, artist):
+        """Query for artist info"""
+        logger = logging.getLogger('PostgresProxy')
+        cursor = self._conn.cursor()
+
+        try:
+            print(artist)
+            cursor.execute(""" SELECT youtube, bandcamp, spotify, applemusic FROM artist_info
+                               WHERE artist_name = %s """, (artist,))
+
+            artist_info_row = cursor.fetchone()
+            logger.info("Finished artist_info_command")
+            return artist_info_row
+
+        except Exception as error:
+            logger.error("Was unable to finsih issue with artist_info_command: %s", error)
+            self.print_psycopg2_exception(error)
+
+        cursor.close()
+
     def print_psycopg2_exception(self, error):
         """Define a function that handles and parses psycopg2 exceptions"""
         # get details about the exception
