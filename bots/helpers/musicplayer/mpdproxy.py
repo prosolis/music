@@ -38,12 +38,21 @@ class MPDProxy:
         logger.warning("MPD localhost has been manually disconnected")
 
     async def mpd_song_info(self):
-        """Fetch the current song's title, artist, and fingerprint"""
+        """Fetch the current song's title and artist"""
         title = self._client.currentsong()['title']
         artist = self._client.currentsong()['artist']
+        return title, artist
+
+    async def mpd_get_fingerprint(self):
+        """Fetch the current song's fingerprint"""
         fingerprint = self._client.readcomments(
             self._client.currentsong()['file'])['acoustid_fingerprint']
-        return title, artist, fingerprint
+        return fingerprint
+
+    async def mpd_get_artist_info(self):
+        """Fetch the current song's artist"""
+        artist = self._client.currentsong()['artist']
+        return artist
 
     async def mpd_album_art(self):
         """Dump the album art to disk"""

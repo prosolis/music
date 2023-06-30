@@ -51,8 +51,10 @@ async def discover_command_requests(youtube, response, live_chatid):
     """Discover any commands passed into live chat"""
     logger = logging.getLogger('YoutubeBot')
 
-    test_command_str = "!test"
-    like_command_str = "!like"
+    test_command_str    = "!test"
+    like_command_str    = "!like"
+    song_command_str    = "!song"
+    artist_command_str  ="!artist"
 
     for items in response["items"]:
         text_message = items["snippet"]["textMessageDetails"]["messageText"]
@@ -67,6 +69,15 @@ async def discover_command_requests(youtube, response, live_chatid):
         elif text_message == like_command_str:
             logger.debug("Found like command")
             await respond_like_command(youtube, live_chatid, author_id)
+
+        elif text_message == song_command_str:
+            logger.debug("Found song command")
+            await respond_song_command(youtube, live_chatid)
+
+        elif text_message == artist_command_str:
+            logger.debug("Found aritst command")
+            await respond_artist_command(youtube, live_chatid)
+
 
 
 async def respond_test_command(youtube, live_chatid):
@@ -93,16 +104,12 @@ async def respond_test_command(youtube, live_chatid):
     except requests.exceptions.HTTPError as request_httperror:
         logger.error(str(request_httperror))
 
-
 async def respond_like_command(youtube, live_chatid, author_id):
-    """Logic for test command, returns test message back to bots live chat"""
+    """Logic for like command, returns a thankful message to youtube live chat"""
     logger = logging.getLogger('YoutubeBot')
 
     mpd = mpdproxy.MPDProxy()
-    title, artist, fingerprint = await mpd.mpd_song_info()
-
-    #TODO(camcast): Need to figure out if these items are worth returning
-    print(title, artist)
+    fingerprint = await mpd.mpd_get_fingerprint()
 
     load_dotenv()
     platform_name = 'Youtube'
@@ -131,6 +138,76 @@ async def respond_like_command(youtube, live_chatid, author_id):
         response = request.execute()
         print(response)
         logger.debug("Sent like command response to live stream")
+
+    except requests.exceptions.HTTPError as request_httperror:
+        logger.error(str(request_httperror))
+
+async def respond_song_command(youtube, live_chatid):
+    """Logic for song command, returns song title and artist to the youtube live chat"""
+    logger = logging.getLogger('YoutubeBot')
+
+    mpd = mpdproxy.MPDProxy()
+    title, artist = await mpd.mpd_song_info()
+    await mpd.mpd_connection_close()
+
+    message = f"The current song is {title} by {artist}"
+
+    try:
+        request = youtube.liveChatMessages().insert(
+            part="snippet",
+            body={
+                "snippet": {
+                    "liveChatId": live_chatid,
+                    "type": "textMessageEvent",
+                    "textMessageDetails": {
+                        "messageText": message
+                    }
+                }
+            }
+        )
+        response = request.execute()
+        print(response)
+        logger.debug("Sent song command response to live stream")
+
+    except requests.exceptions.HTTPError as request_httperror:
+        logger.error(str(request_httperror))
+
+async def respond_artist_command(youtube, live_chatid):
+    """Logic for artist command, returns artist socials to youtube live chat"""
+    logger = logging.getLogger('YoutubeBot')
+
+    mpd = mpdproxy.MPDProxy()
+    artist = await mpd.mpd_get_artist_info()
+
+    load_dotenv()
+    postgres = postgresproxy.PostgresProxy(
+        user=os.getenv("POSTGRES_USER"), password=os.getenv("POSTGRES_PASSWORD"))
+    socials = await postgres.artist_info_command(artist)
+
+    await mpd.mpd_connection_close()
+    await postgres.postgres_connection_close()
+
+    message = f'''Artist Name: {artist} \n
+    YouTube: {socials[0]}'''
+
+    print(message)
+
+    try:
+        request = youtube.liveChatMessages().insert(
+            part="snippet",
+            body={
+                "snippet": {
+                    "liveChatId": live_chatid,
+                    "type": "textMessageEvent",
+                    "textMessageDetails": {
+                        "messageText": message
+                    }
+                }
+            }
+        )
+        response = request.execute()
+        print(response)
+        logger.debug("Sent artist command response to live stream")
 
     except requests.exceptions.HTTPError as request_httperror:
         logger.error(str(request_httperror))
