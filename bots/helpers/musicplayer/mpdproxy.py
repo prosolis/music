@@ -68,7 +68,7 @@ class MPDProxy:
             logger.error("Could not open %s cover.png: %s",
                          self._client.currentsong()['title'], oserror)
 
-    async def mpd_update_playlist(self):
+    #async def mpd_update_playlist(self):
         
 
     async def mpd_playlist_info(self):

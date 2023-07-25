@@ -134,3 +134,30 @@ class PostgresProxy:
                         %s, %s, DEFAULT) """
         cursor.execute(query, (fingerprint, user_id, platform_name))
         self._conn.commit()
+
+    async def artist_exists(self, artist):
+        """Does the given artist already exist inside the DB"""
+        logger = logging.getLogger('PostgresProxy')
+        cursor = self._conn.cursor()
+
+        artist_exists = "f"
+
+        try:
+            query = """ SELECT EXISTS(SELECT FROM artist_info WHERE artist_name = %s) """
+
+            cursor.execute(query, (artist, ))
+
+            artist_exists = cursor.fetchone()
+
+            logger.info("Finished artist_exists and returned %s for %s artist", artist_exists, artist)
+
+        except Exception as error:
+            logger.error("Was unable to finsih issue with insert_song_likes: %s", error)
+            self.print_psycopg2_exception(error)
+
+        return artist_exists
+
+
+
+
+        
