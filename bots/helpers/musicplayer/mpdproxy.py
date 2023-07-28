@@ -37,7 +37,7 @@ class MPDProxy:
         self._client.disconnect()
         logger.warning("MPD localhost has been manually disconnected")
 
-    async def mpd_song_info(self):
+    async def mpd_get_current_song_title_and_artist(self):
         """Fetch the current song's title and artist"""
         title = self._client.currentsong()['title']
         artist = self._client.currentsong()['artist']
@@ -68,23 +68,22 @@ class MPDProxy:
             logger.error("Could not open %s cover.png: %s",
                          self._client.currentsong()['title'], oserror)
 
-    #async def mpd_update_playlist(self):
-        
-
     async def mpd_playlist_info(self):
         """Return the current MPD playlist"""
         return self._client.playlist()
 
     async def mpd_next_song_info(self):
         """Fetch the next song's artist and title"""
-        artist = self._client.playlistid(self._client.status()['nextsongid'])[0]['artist']
-        title = self._client.playlistid(self._client.status()['nextsongid'])[0]['title']
-        return artist, title
+        logger = logging.getLogger('MPDProxy')
+        title = None
 
-    async def mpd_fetch_current_song_id(self):
-        """Fetch the current song ID"""
-        return self._client.currentsong()['id']
+        try:
+            #artist = self._client.playlistid(self._client.status()['nextsongid'])[0]['artist']
+            title = self._client.playlistid(self._client.status()['nextsongid'])[0]['title']
+        except Exception as e:
+            logger.info("Unable to get next song title")
 
-    async def mpd_fetch_song_fingerprint(self):
-        """Fetch current song acoustic fingerprint"""
-        return self._client.readcomments(self._client.currentsong()['file'])['acoustid_fingerprint']
+        return title
+                
+    async def mpd_shuffle_playlist(self):
+        self._client.shuffle()

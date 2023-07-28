@@ -75,6 +75,7 @@ class PostgresProxy:
                 await self.song_likes_helper(cursor, user_id, platform_name, fingerprint)
 
             logger.info("Finished insert_song_likes")
+
         except Exception as error:
             logger.error("Was unable to finsih issue with insert_song_likes: %s", error)
             self.print_psycopg2_exception(error)
@@ -101,6 +102,103 @@ class PostgresProxy:
 
         cursor.close()
 
+    async def song_likes_helper(self, cursor, user_id, platform_name, fingerprint):
+        """Helper to liminate duplicate code"""
+        query = """ UPDATE song_info SET song_likes_count = (song_likes_count + 1)
+                    WHERE fingerprint = %s """
+        cursor.execute(query, (fingerprint, ))
+
+        query = """ INSERT INTO song_likes VALUES (
+                        nextval('song_likes_id_seq'),
+                        (SELECT id FROM song_info WHERE fingerprint = %s),
+                        %s, %s, DEFAULT) """
+        cursor.execute(query, (fingerprint, user_id, platform_name))
+        self._conn.commit()
+
+    async def artist_exists(self, artist):
+        """Does the given artist already exist inside the DB if not insert the artist"""
+        logger = logging.getLogger('PostgresProxy')
+        cursor = self._conn.cursor()
+
+        try:
+            query = """ SELECT * FROM artist_info WHERE artist_name = %s """;
+
+            cursor.execute(query, (artist, ))
+            artist_exists = cursor.fetchone()
+
+            if(artist_exists is None):
+                query = """ INSERT INTO artist_info VALUES (
+                        nextval('artist_info_id_seq'), %s) """
+
+                cursor.execute(query, (artist, ))
+                self._conn.commit()
+                logger.info("%s has been added to the database", artist)
+
+            else:
+                logger.info("No new artist added")
+            
+
+            logger.info("Finished artist_exists")
+
+        except Exception as error:
+            logger.error("Was unable to finsih, issue with artist_exists: %s", error)
+            self.print_psycopg2_exception(error)
+
+    async def song_exists(self, title, artist, fingerprint):
+        """Does the given song already exist inside the DB if not insert the song"""
+        logger = logging.getLogger('PostgresProxy')
+        cursor = self._conn.cursor()
+
+        try:
+            query = """ SELECT * FROM song_info WHERE fingerprint = %s """;
+
+            cursor.execute(query, (fingerprint, ))
+            song_exists = cursor.fetchone()
+
+            if(song_exists is None):
+                query = """ INSERT INTO song_info VALUES (
+                        nextval('song_info_id_seq'), 
+                        %s,
+                        (SELECT id FROM artist_info WHERE artist_name = %s),
+                        %s,
+                        DEFAULT) """
+
+                cursor.execute(query, (fingerprint, artist, title))
+                self._conn.commit()
+                logger.info("%s by %s has been added to the database", title, artist)
+
+            else:
+                logger.info("No new song added")
+            
+
+            logger.info("Finished song_exists")
+
+        except Exception as error:
+            logger.error("Was unable to finsih, issue with song_exists: %s", error)
+            self.print_psycopg2_exception(error)
+
+    async def insert_play_history(self, title, artist, fingerprint):
+        """insert the song into play history"""
+        logger = logging.getLogger('PostgresProxy')
+        cursor = self._conn.cursor()
+
+        try:
+            query = """ INSERT INTO play_history VALUES (
+                        nextval('play_history_id_seq'),
+                        (SELECT id FROM song_info WHERE fingerprint = %s),
+                        current_timestamp) """;
+
+            cursor.execute(query, (fingerprint, ))
+
+            self._conn.commit()
+            logger.info("%s by %s has been record recorded as played", title, artist)            
+
+            logger.info("Finished insert_play_history")
+
+        except Exception as error:
+            logger.error("Was unable to finsih, issue with insert_play_history: %s", error)
+            self.print_psycopg2_exception(error)
+
     def print_psycopg2_exception(self, error):
         """Define a function that handles and parses psycopg2 exceptions"""
         # get details about the exception
@@ -121,43 +219,3 @@ class PostgresProxy:
         print ("pgerror:", error.pgerror)
         print ("pgcode:", error.pgcode, "\n")
         logger.debug("Error Object from postgres: %s", err_obj)
-
-    async def song_likes_helper(self, cursor, user_id, platform_name, fingerprint):
-        """Helper to liminate duplicate code"""
-        query = """ UPDATE song_info SET song_likes_count = (song_likes_count + 1)
-                    WHERE fingerprint = %s """
-        cursor.execute(query, (fingerprint, ))
-
-        query = """ INSERT INTO song_likes VALUES (
-                        nextval('song_likes_id_seq'),
-                        (SELECT id FROM song_info WHERE fingerprint = %s),
-                        %s, %s, DEFAULT) """
-        cursor.execute(query, (fingerprint, user_id, platform_name))
-        self._conn.commit()
-
-    async def artist_exists(self, artist):
-        """Does the given artist already exist inside the DB"""
-        logger = logging.getLogger('PostgresProxy')
-        cursor = self._conn.cursor()
-
-        artist_exists = "f"
-
-        try:
-            query = """ SELECT EXISTS(SELECT FROM artist_info WHERE artist_name = %s) """
-
-            cursor.execute(query, (artist, ))
-
-            artist_exists = cursor.fetchone()
-
-            logger.info("Finished artist_exists and returned %s for %s artist", artist_exists, artist)
-
-        except Exception as error:
-            logger.error("Was unable to finsih issue with insert_song_likes: %s", error)
-            self.print_psycopg2_exception(error)
-
-        return artist_exists
-
-
-
-
-        
