@@ -8,6 +8,9 @@ from dotenv import load_dotenv
 from helpers.musicplayer import mpdproxy
 from helpers.postgres import postgresproxy
 
+# TODO(camcast): #3 make one youtube_bot class + migrate youtube helpers into that file
+# TODO(camcast): #4 Put sending of message to a helper function  
+
 async def get_live_chat_messages(youtube, live_chatid):
     """Get YouTube Live Chat Messages"""
     logger = logging.getLogger('YoutubeProBot')
@@ -46,7 +49,6 @@ async def get_live_chat_messages(youtube, live_chatid):
         logger.error(str(request_httperror))
         return
 
-
 async def discover_command_requests(youtube, response, live_chatid):
     """Discover any commands passed into live chat"""
     logger = logging.getLogger('YoutubeBot')
@@ -77,8 +79,6 @@ async def discover_command_requests(youtube, response, live_chatid):
         elif text_message == artist_command_str:
             logger.debug("Found aritst command")
             await respond_artist_command(youtube, live_chatid)
-
-
 
 async def respond_test_command(youtube, live_chatid):
     """Logic for test command, returns test message back to bots live chat"""
@@ -189,8 +189,6 @@ async def respond_artist_command(youtube, live_chatid):
 
     message = f'''Artist Name: {artist} \n
     YouTube: {socials[0]}'''
-
-    print(message)
 
     try:
         request = youtube.liveChatMessages().insert(
