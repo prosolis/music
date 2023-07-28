@@ -72,18 +72,18 @@ class MPDProxy:
         """Return the current MPD playlist"""
         return self._client.playlist()
 
-    async def mpd_next_song_info(self):
+    async def mpd_next_song_title(self):
         """Fetch the next song's artist and title"""
         logger = logging.getLogger('MPDProxy')
         title = None
 
         try:
-            #artist = self._client.playlistid(self._client.status()['nextsongid'])[0]['artist']
             title = self._client.playlistid(self._client.status()['nextsongid'])[0]['title']
-        except Exception as e:
-            logger.info("Unable to get next song title")
+        except KeyError as key_error:
+            logger.info("Unable to get next song title due to KeyError: %s", key_error)
 
         return title
-                
+
     async def mpd_shuffle_playlist(self):
+        """Takes the current playlist and shuffles it"""
         self._client.shuffle()

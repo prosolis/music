@@ -121,12 +121,12 @@ class PostgresProxy:
         cursor = self._conn.cursor()
 
         try:
-            query = """ SELECT * FROM artist_info WHERE artist_name = %s """;
+            query = """ SELECT * FROM artist_info WHERE artist_name = %s """
 
             cursor.execute(query, (artist, ))
             artist_exists = cursor.fetchone()
 
-            if(artist_exists is None):
+            if artist_exists is None:
                 query = """ INSERT INTO artist_info VALUES (
                         nextval('artist_info_id_seq'), %s) """
 
@@ -136,7 +136,7 @@ class PostgresProxy:
 
             else:
                 logger.info("No new artist added")
-            
+
 
             logger.info("Finished artist_exists")
 
@@ -150,12 +150,12 @@ class PostgresProxy:
         cursor = self._conn.cursor()
 
         try:
-            query = """ SELECT * FROM song_info WHERE fingerprint = %s """;
+            query = """ SELECT * FROM song_info WHERE fingerprint = %s """
 
             cursor.execute(query, (fingerprint, ))
             song_exists = cursor.fetchone()
 
-            if(song_exists is None):
+            if song_exists is None:
                 query = """ INSERT INTO song_info VALUES (
                         nextval('song_info_id_seq'), 
                         %s,
@@ -169,7 +169,7 @@ class PostgresProxy:
 
             else:
                 logger.info("No new song added")
-            
+
 
             logger.info("Finished song_exists")
 
@@ -186,12 +186,12 @@ class PostgresProxy:
             query = """ INSERT INTO play_history VALUES (
                         nextval('play_history_id_seq'),
                         (SELECT id FROM song_info WHERE fingerprint = %s),
-                        current_timestamp) """;
+                        current_timestamp) """
 
             cursor.execute(query, (fingerprint, ))
 
             self._conn.commit()
-            logger.info("%s by %s has been record recorded as played", title, artist)            
+            logger.info("%s by %s has been record recorded as played", title, artist)
 
             logger.info("Finished insert_play_history")
 

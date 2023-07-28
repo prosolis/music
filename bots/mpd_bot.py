@@ -18,7 +18,7 @@ async def main():
     logger.info("MPD Bot has started")
 
     mpd = mpdproxy.MPDProxy()
-    current_fingerprint = await mpd.mpd_get_fingerprint() 
+    current_fingerprint = await mpd.mpd_get_fingerprint()
     current_title, current_artist = await mpd.mpd_get_current_song_title_and_artist()
 
     await check_song_exists(current_fingerprint, current_title, current_artist)
@@ -31,7 +31,7 @@ async def main():
 
         result_fingerprint = await mpd.mpd_get_fingerprint()
 
-        if(current_fingerprint != result_fingerprint):
+        if current_fingerprint != result_fingerprint:
             logger.info("Playing different song")
 
             current_fingerprint = result_fingerprint
@@ -43,9 +43,9 @@ async def main():
         else:
             logger.info("Same song, skipping checks and updates")
 
-        next_song_title = await mpd.mpd_next_song_info()
+        next_song_title = await mpd.mpd_next_song_title()
 
-        if(next_song_title is None):
+        if next_song_title is None:
             logger.info("Reached the end of the playlist")
             await mpd.mpd_shuffle_playlist()
 
@@ -55,6 +55,7 @@ async def main():
         await asyncio.sleep(90)
 
 async def check_song_exists(fingerprint, title, artist):
+    """Checks if artist and song exists inside the database"""
     logger = logging.getLogger('MPDBot')
 
     load_dotenv()
@@ -71,12 +72,13 @@ async def check_song_exists(fingerprint, title, artist):
     logger.info("Finished check_song_exists")
 
 async def update_play_history(fingerprint, title, artist):
+    """Update play_history table with current song"""
     logger = logging.getLogger('MPDBot')
 
     load_dotenv()
     postgres = postgresproxy.PostgresProxy(
         user=os.getenv("POSTGRES_USER"), password=os.getenv("POSTGRES_PASSWORD"))
-    
+
     await postgres.insert_play_history(title, artist, fingerprint)
 
     logger.info("Finished update_play_history")
