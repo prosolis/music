@@ -5,11 +5,12 @@ import logging
 import os
 import requests
 from dotenv import load_dotenv
+
 from helpers.musicplayer import mpdproxy
 from helpers.postgres import postgresproxy
 
 # TODO(camcast): #3 make one youtube_bot class + migrate youtube helpers into that file
-# TODO(camcast): #4 Put sending of message to a helper function  
+# TODO(camcast): #4 Put sending of message to a helper function
 
 async def get_live_chat_messages(youtube, live_chatid):
     """Get YouTube Live Chat Messages"""

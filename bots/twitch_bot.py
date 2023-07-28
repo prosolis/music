@@ -1,3 +1,4 @@
+"""Twitch Bot used for interacting with Prosolis Radio stream on Twitch"""
 import logging
 import os
 from dotenv import load_dotenv
@@ -7,12 +8,13 @@ from helpers.musicplayer import mpdproxy
 from helpers.postgres import postgresproxy
 
 
-class Twitch_Bot(commands.Bot):
+class TwitchBot(commands.Bot):
     """Class for Twitch_Bot extending twitchio bot"""
-    
+
     # TODO(camcast): #1 Setup log_level as an environment variable
-    # TODO(camcast): #2 make one common helper python file for running like, song, artist commands for better maintance
-    
+    # TODO(camcast): #2 make one common helper python file for running like, song,
+    # artist commands for better maintance
+
     def __init__(self):
         """Initialise our Bot with our access token, prefix and our channel"""
         log_format = '%(asctime)s %(message)s'
@@ -35,7 +37,7 @@ class Twitch_Bot(commands.Bot):
 
     async def event_message(self, message):
         """Read all incoming messages execpt response from the bot itself"""
-        
+
         # Messages with echo set to True are messages sent by the bot
         if message.echo:
             return
@@ -45,15 +47,6 @@ class Twitch_Bot(commands.Bot):
             "Recieved message from twitch. Author: %s", message.author)
         await self.handle_commands(message)
 
-    @commands.command()
-    async def hello(self, ctx: commands.Context):
-        # Here we have a command hello, we can invoke our command with our prefix and command name
-        # e.g !hello
-
-        # Send a hello back!
-        # Sending a reply back to the channel is easy... Below is an example.7
-        await ctx.send(f'Hello {ctx.author.name}!')
-    
     @commands.command()
     async def like(self, ctx: commands.Context):
         """Logic for like command, returns a thankful message to twitch chat"""
@@ -71,7 +64,8 @@ class Twitch_Bot(commands.Bot):
         await mpd.mpd_connection_close()
         await postgres.postgres_connection_close()
 
-        return_message = "Thanks this data will help us continue bringing the best music to Prosolis Radio"
+        return_message = '''Thanks this data will help us continue bringing the
+            best music to Prosolis Radio'''
 
         await ctx.send(return_message)
         self.logger.debug("Sent like command response to twitch stream")
@@ -109,5 +103,5 @@ class Twitch_Bot(commands.Bot):
         await ctx.send(return_message)
         self.logger.debug("Sent artist command resspone to twitch stream")
 
-bot = Twitch_Bot()
+bot = TwitchBot()
 bot.run()
