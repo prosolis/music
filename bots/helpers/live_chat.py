@@ -148,7 +148,7 @@ async def respond_song_command(youtube, live_chatid):
     logger = logging.getLogger('YoutubeBot')
 
     mpd = mpdproxy.MPDProxy()
-    title, artist = await mpd.mpd_song_info()
+    title, artist = await mpd.mpd_get_current_song_title_and_artist()
     await mpd.mpd_connection_close()
 
     message = f"The current song is {title} by {artist}"
