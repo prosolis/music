@@ -97,7 +97,7 @@ class TwitchBot(commands.Bot):
         await mpd.mpd_connection_close()
         await postgres.postgres_connection_close()
 
-        return_message = f'''Artist Name: {artist} \n
+        return_message = f'''Artist Name: {current_artist} \n
         YouTube: {socials[0]}'''
 
         await ctx.send(return_message)
