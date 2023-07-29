@@ -1,4 +1,4 @@
-"""YouTube bot will run continuously after going live via YouTube"""
+"""YouTube Bot will run continuously after going live via YouTube"""
 import logging
 import asyncio
 import os
@@ -12,7 +12,7 @@ from helpers import live_broadcast, live_chat
 
 
 async def main():
-    """Initializes Radio Proslis Bot for YouTube."""
+    """Initializes Prosolis Radio Bot for YouTube."""
     log_format = '%(asctime)s %(message)s'
     log_level = 10
 

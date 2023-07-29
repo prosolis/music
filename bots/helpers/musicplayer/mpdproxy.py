@@ -37,7 +37,7 @@ class MPDProxy:
         self._client.disconnect()
         logger.warning("MPD localhost has been manually disconnected")
 
-    async def mpd_song_info(self):
+    async def mpd_get_current_song_title_and_artist(self):
         """Fetch the current song's title and artist"""
         title = self._client.currentsong()['title']
         artist = self._client.currentsong()['artist']
@@ -72,16 +72,18 @@ class MPDProxy:
         """Return the current MPD playlist"""
         return self._client.playlist()
 
-    async def mpd_next_song_info(self):
+    async def mpd_next_song_title(self):
         """Fetch the next song's artist and title"""
-        artist = self._client.playlistid(self._client.status()['nextsongid'])[0]['artist']
-        title = self._client.playlistid(self._client.status()['nextsongid'])[0]['title']
-        return artist, title
+        logger = logging.getLogger('MPDProxy')
+        title = None
 
-    async def mpd_fetch_current_song_id(self):
-        """Fetch the current song ID"""
-        return self._client.currentsong()['id']
+        try:
+            title = self._client.playlistid(self._client.status()['nextsongid'])[0]['title']
+        except KeyError as key_error:
+            logger.info("Unable to get next song title due to KeyError: %s", key_error)
 
-    async def mpd_fetch_song_fingerprint(self):
-        """Fetch current song acoustic fingerprint"""
-        return self._client.readcomments(self._client.currentsong()['file'])['acoustid_fingerprint']
+        return title
+
+    async def mpd_shuffle_playlist(self):
+        """Takes the current playlist and shuffles it"""
+        self._client.shuffle()
