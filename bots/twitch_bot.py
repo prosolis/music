@@ -102,7 +102,7 @@ class TwitchBot(commands.Bot):
 
         for social in socials:
             if social is not None:
-                return_message += f'''{social} \n'''  
+                return_message += f'''{social} \n'''
 
         await ctx.send(return_message)
         self.logger.debug("Sent artist command resspone to twitch stream")
