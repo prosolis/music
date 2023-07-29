@@ -98,7 +98,10 @@ class TwitchBot(commands.Bot):
         await postgres.postgres_connection_close()
 
         return_message = f'''Artist Name: {current_artist} \n
-        YouTube: {socials[0]}'''
+        Social Links: {socials[0]}, 
+        {socials[1]},
+        {socials[2]},
+        {socials[3]}'''
 
         await ctx.send(return_message)
         self.logger.debug("Sent artist command resspone to twitch stream")
