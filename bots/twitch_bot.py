@@ -75,7 +75,7 @@ class TwitchBot(commands.Bot):
         """Logic for song command, returns song title and artist to the twitch chat"""
 
         mpd = mpdproxy.MPDProxy()
-        title, artist = await mpd.mpd_song_info()
+        title, artist = await mpd.mpd_get_current_song_title_and_artist()
         await mpd.mpd_connection_close()
 
         return_message = f"The current song is {title} by {artist}"
@@ -87,12 +87,12 @@ class TwitchBot(commands.Bot):
     async def artist(self, ctx: commands.Context):
         """Logic for artist command, returns artist socials to twitch chat"""
         mpd = mpdproxy.MPDProxy()
-        artist = await mpd.mpd_get_artist_info()
+        current_artist = await mpd.mpd_get_artist_info()
 
         load_dotenv()
         postgres = postgresproxy.PostgresProxy(
             user=os.getenv("POSTGRES_USER"), password=os.getenv("POSTGRES_PASSWORD"))
-        socials = await postgres.artist_info_command(artist)
+        socials = await postgres.artist_info_command(current_artist)
 
         await mpd.mpd_connection_close()
         await postgres.postgres_connection_close()
