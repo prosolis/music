@@ -103,7 +103,7 @@ class PostgresProxy:
         cursor.close()
 
     async def song_likes_helper(self, cursor, user_id, platform_name, fingerprint):
-        """Helper to liminate duplicate code"""
+        """Helper to eliminate duplicate code"""
         query = """ UPDATE song_info SET song_likes_count = (song_likes_count + 1)
                     WHERE fingerprint = %s """
         cursor.execute(query, (fingerprint, ))
@@ -141,7 +141,7 @@ class PostgresProxy:
             logger.info("Finished artist_exists")
 
         except Exception as error:
-            logger.error("Was unable to finsih, issue with artist_exists: %s", error)
+            logger.error("Was unable to finish, issue with artist_exists: %s", error)
             self.print_psycopg2_exception(error)
 
     async def song_exists(self, title, artist, fingerprint):
