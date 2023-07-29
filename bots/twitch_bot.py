@@ -97,11 +97,12 @@ class TwitchBot(commands.Bot):
         await mpd.mpd_connection_close()
         await postgres.postgres_connection_close()
 
-        return_message = f'''Artist Name: {current_artist} \n
-        Social Links: {socials[0]}, 
-        {socials[1]},
-        {socials[2]},
-        {socials[3]}'''
+        return_message = f'''Artist Name: {current_artist}
+        \n Social Links: '''
+
+        for social in socials:
+            if social is not None:
+                return_message += f'''{social} \n'''  
 
         await ctx.send(return_message)
         self.logger.debug("Sent artist command resspone to twitch stream")
