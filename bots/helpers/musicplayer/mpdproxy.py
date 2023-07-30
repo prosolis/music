@@ -91,6 +91,11 @@ class MPDProxy:
         except OSError as oserror:
             logger.error("Could not open %s cover.png: %s",
                          self._client.currentsong()['title'], oserror)
+        except KeyError as keyerror:
+            logger.error("Album art is missing for %s by %s @Prosolis: %s",
+                        self._client.currentsong()['title'],
+                        self._client.currentsong()['artist'],
+                        keyerror)
 
     async def mpd_playlist_info(self):
         """Return the current MPD playlist"""
