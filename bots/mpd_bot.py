@@ -13,7 +13,7 @@ async def main():
     log_format = '%(asctime)s %(message)s'
     log_level = 10
 
-    logging.basicConfig(format=log_format, level=log_level)
+    logging.basicConfig(filename='mpd_bot.log', filemode='w', level=log_level)
     logger = logging.getLogger('MPDBot')
     logger.info("MPD Bot has started")
 
