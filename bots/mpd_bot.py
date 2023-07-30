@@ -11,9 +11,9 @@ from helpers.postgres import postgresproxy
 async def main():
     """Initializes Prosolis Radio Bot for MPD."""
     log_format = '%(asctime)s %(message)s'
-    log_level = 10
+    log_level = 30
 
-    logging.basicConfig(filename='mpd_bot.log', filemode='w', level=log_level)
+    logging.basicConfig(filename='mpd_bot.log', filemode='a', level=log_level, format=log_format)
     logger = logging.getLogger('MPDBot')
     logger.info("MPD Bot has started")
 

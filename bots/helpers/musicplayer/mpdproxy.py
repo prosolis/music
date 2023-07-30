@@ -35,7 +35,7 @@ class MPDProxy:
         logger = logging.getLogger('MPDProxy')
         self._client.close()
         self._client.disconnect()
-        logger.warning("MPD localhost has been manually disconnected")
+        logger.info("MPD localhost has been manually disconnected")
 
     async def mpd_get_current_song_title_and_artist(self):
         """Fetch the current song's title and artist"""

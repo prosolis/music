@@ -14,9 +14,9 @@ from helpers import live_broadcast, live_chat
 async def main():
     """Initializes Prosolis Radio Bot for YouTube."""
     log_format = '%(asctime)s %(message)s'
-    log_level = 10
+    log_level = 30
 
-    logging.basicConfig(format=log_format, level=log_level)
+    logging.basicConfig(filename='youtube_bot.log', filemode='a', level=log_level, format=log_format)
     logger = logging.getLogger('YoutubeBot')
     logger.info("YouTube Bot has started")
 
