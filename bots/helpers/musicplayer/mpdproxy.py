@@ -54,11 +54,14 @@ class MPDProxy:
         artist = self._client.currentsong()['artist']
         return artist
 
-    async def mpd_dump_song_title(self):
+    async def mpd_dump_song_title(self, folder_path):
         """Dump the song title to disk"""
         logger = logging.getLogger('MPDProxy')
         try:
-            with open("songtitle.txt", "wb") as file_open:
+            file_name = "songtitle.txt"
+            file_path = folder_path + "/" + file_name
+
+            with open(file_path, "wb+") as file_open:
                 song_title = self._client.currentsong()['title']
                 song_title_bytes = bytes(song_title, 'utf-8')
                 file_open.write(song_title_bytes)
@@ -66,11 +69,14 @@ class MPDProxy:
         except OSError as oserror:
             logger.error("Could not open songtitle.txt: %s", oserror)
 
-    async def mpd_dump_song_artist(self):
+    async def mpd_dump_song_artist(self, folder_path):
         """Dump the song artist to disk"""
         logger = logging.getLogger('MPDProxy')
         try:
-            with open("songartist.txt", "wb") as file_open:
+            file_name = "songartist.txt"
+            file_path = folder_path + "/" + file_name
+
+            with open(file_path, "wb+") as file_open:
                 song_artist = self._client.currentsong()['artist']
                 song_artist_bytes = bytes(song_artist, 'utf-8')
                 file_open.write(song_artist_bytes)
@@ -78,11 +84,14 @@ class MPDProxy:
         except OSError as oserror:
             logger.error("Could not open songartist.txt: %s", oserror)
 
-    async def mpd_dump_album_art(self):
+    async def mpd_dump_album_art(self, folder_path):
         """Dump the album art to disk"""
         logger = logging.getLogger('MPDProxy')
         try:
-            with open("cover.jpg", "wb") as file_open:
+            file_name = "cover.jpg"
+            file_path = folder_path + "/" + file_name
+
+            with open(file_path, "wb+") as file_open:
                 album_art_dict = self._client.readpicture(self._client.currentsong()['file'])
 
                 if album_art_dict is None:
