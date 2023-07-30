@@ -84,13 +84,19 @@ class MPDProxy:
         try:
             with open("cover.jpg", "wb") as file_open:
                 album_art_dict = self._client.readpicture(self._client.currentsong()['file'])
+
+                if album_art_dict is None:
+                    album_art_dict = self._client.albumart(self._client.currentsong()['file'])
+
                 album_art = album_art_dict["binary"]
                 album_art_bytearray = bytearray(album_art)
                 file_open.write(album_art_bytearray)
                 file_open.close()
+
         except OSError as oserror:
             logger.error("Could not open %s cover.png: %s",
                          self._client.currentsong()['title'], oserror)
+
         except KeyError as keyerror:
             logger.error("Album art is missing for %s by %s @Prosolis: %s",
                         self._client.currentsong()['title'],
