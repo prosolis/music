@@ -18,9 +18,10 @@ class TwitchBot(commands.Bot):
     def __init__(self):
         """Initialise our Bot with our access token, prefix and our channel"""
         log_format = '%(asctime)s %(message)s'
-        log_level = 10
+        log_level = 30
 
-        logging.basicConfig(format=log_format, level=log_level)
+        logging.basicConfig(filename='twitch_bot.log', filemode='a',
+                            level=log_level, format=log_format)
         self.logger = logging.getLogger('TwitchBot')
         self.logger.info("Twitch Bot has started")
 

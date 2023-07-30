@@ -35,7 +35,7 @@ class MPDProxy:
         logger = logging.getLogger('MPDProxy')
         self._client.close()
         self._client.disconnect()
-        logger.warning("MPD localhost has been manually disconnected")
+        logger.info("MPD localhost has been manually disconnected")
 
     async def mpd_get_current_song_title_and_artist(self):
         """Fetch the current song's title and artist"""
@@ -54,19 +54,54 @@ class MPDProxy:
         artist = self._client.currentsong()['artist']
         return artist
 
-    async def mpd_album_art(self):
+    async def mpd_dump_song_title(self):
+        """Dump the song title to disk"""
+        logger = logging.getLogger('MPDProxy')
+        try:
+            with open("songtitle.txt", "wb") as file_open:
+                song_title = self._client.currentsong()['title']
+                song_title_bytes = bytes(song_title, 'utf-8')
+                file_open.write(song_title_bytes)
+                file_open.close()
+        except OSError as oserror:
+            logger.error("Could not open songtitle.txt: %s", oserror)
+
+    async def mpd_dump_song_artist(self):
+        """Dump the song artist to disk"""
+        logger = logging.getLogger('MPDProxy')
+        try:
+            with open("songartist.txt", "wb") as file_open:
+                song_artist = self._client.currentsong()['artist']
+                song_artist_bytes = bytes(song_artist, 'utf-8')
+                file_open.write(song_artist_bytes)
+                file_open.close()
+        except OSError as oserror:
+            logger.error("Could not open songartist.txt: %s", oserror)
+
+    async def mpd_dump_album_art(self):
         """Dump the album art to disk"""
         logger = logging.getLogger('MPDProxy')
         try:
             with open("cover.jpg", "wb") as file_open:
-                songimagedict = self._client.readpicture(self._client.currentsong()['file'])
-                songimage = songimagedict["binary"]
-                songimage_bytearray = bytearray(songimage)
-                file_open.write(songimage_bytearray)
+                album_art_dict = self._client.readpicture(self._client.currentsong()['file'])
+
+                if album_art_dict is None:
+                    album_art_dict = self._client.albumart(self._client.currentsong()['file'])
+
+                album_art = album_art_dict["binary"]
+                album_art_bytearray = bytearray(album_art)
+                file_open.write(album_art_bytearray)
                 file_open.close()
+
         except OSError as oserror:
             logger.error("Could not open %s cover.png: %s",
                          self._client.currentsong()['title'], oserror)
+
+        except KeyError as keyerror:
+            logger.error("Album art is missing for %s by %s @Prosolis: %s",
+                        self._client.currentsong()['title'],
+                        self._client.currentsong()['artist'],
+                        keyerror)
 
     async def mpd_playlist_info(self):
         """Return the current MPD playlist"""
