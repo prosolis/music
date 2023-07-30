@@ -10,3 +10,6 @@ client_secrets.json
 test_music/
 *.mp3
 *.flac
+*.log
+*.txt
+*.jpg

@@ -20,6 +20,9 @@ async def main():
     mpd = mpdproxy.MPDProxy()
     current_fingerprint = await mpd.mpd_get_fingerprint()
     current_title, current_artist = await mpd.mpd_get_current_song_title_and_artist()
+    await mpd.mpd_dump_song_title()
+    await mpd.mpd_dump_song_artist()
+    await mpd.mpd_dump_album_art()
 
     await check_song_exists(current_fingerprint, current_title, current_artist)
     await update_play_history(current_fingerprint, current_title, current_artist)
@@ -36,6 +39,9 @@ async def main():
 
             current_fingerprint = result_fingerprint
             current_title, current_artist = await mpd.mpd_get_current_song_title_and_artist()
+            await mpd.mpd_dump_song_title()
+            await mpd.mpd_dump_song_artist()
+            await mpd.mpd_dump_album_art()
 
             await check_song_exists(current_fingerprint, current_title, current_artist)
             await update_play_history(current_fingerprint, current_title, current_artist)
@@ -50,9 +56,9 @@ async def main():
             await mpd.mpd_shuffle_playlist()
 
         await mpd.mpd_connection_close()
-        logger.info("Starting thread sleep for 1 minute and 30 seconds")
+        logger.info("Starting thread sleep 2 seconds")
 
-        await asyncio.sleep(90)
+        await asyncio.sleep(2)
 
 async def check_song_exists(fingerprint, title, artist):
     """Checks if artist and song exists inside the database"""
