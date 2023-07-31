@@ -17,7 +17,7 @@ async def main():
     log_level = 30
 
     logging.basicConfig(filename='youtube_bot.log', filemode='a',
-                        level=log_level, format=log_format)
+                        level=log_level, format=log_format, encoding="UTF-8")
     logger = logging.getLogger('YoutubeBot')
     logger.info("YouTube Bot has started")
 

@@ -11,9 +11,10 @@ from helpers.postgres import postgresproxy
 async def main():
     """Initializes Prosolis Radio Bot for MPD."""
     log_format = '%(asctime)s %(message)s'
-    log_level = 10
+    log_level = 30
 
-    logging.basicConfig(filename='mpd_bot.log', filemode='a', level=log_level, format=log_format)
+    logging.basicConfig(filename='mpd_bot.log', filemode='a',
+                        level=log_level, format=log_format, encoding="UTF-8")
     logger = logging.getLogger('MPDBot')
     logger.info("MPD Bot has started")
 
@@ -63,7 +64,7 @@ async def main():
         await mpd.mpd_connection_close()
         logger.info("Starting thread sleep 2 seconds")
 
-        await asyncio.sleep(90)
+        await asyncio.sleep(2)
 
 async def check_song_exists(fingerprint, title, artist):
     """Checks if artist and song exists inside the database"""

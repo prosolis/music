@@ -21,7 +21,7 @@ class TwitchBot(commands.Bot):
         log_level = 30
 
         logging.basicConfig(filename='twitch_bot.log', filemode='a',
-                            level=log_level, format=log_format)
+                            level=log_level, format=log_format, encoding="UTF-8")
         self.logger = logging.getLogger('TwitchBot')
         self.logger.info("Twitch Bot has started")
 
