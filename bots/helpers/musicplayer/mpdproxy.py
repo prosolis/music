@@ -92,12 +92,12 @@ class MPDProxy:
             file_path = folder_path + "/" + file_name
 
             with open(file_path, "wb+") as file_open:
-                album_art_dict = self._client.readpicture(self._client.currentsong()['file'])
+                album_art_dictionary = self._client.readpicture(self._client.currentsong()['file'])
 
-                if album_art_dict is None:
-                    album_art_dict = self._client.albumart(self._client.currentsong()['file'])
+                if not album_art_dictionary:
+                    album_art_dictionary = self._client.albumart(self._client.currentsong()['file'])
 
-                album_art = album_art_dict["binary"]
+                album_art = album_art_dictionary["binary"]
                 album_art_bytearray = bytearray(album_art)
                 file_open.write(album_art_bytearray)
                 file_open.close()
