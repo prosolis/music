@@ -11,6 +11,7 @@ import googleapiclient.errors
 from helpers import live_broadcast, live_chat
 
 
+#TODO(camcast): move the auth to a token.pickle file https://www.thepythoncode.com/article/using-youtube-api-in-python for verificiation
 async def main():
     """Initializes Prosolis Radio Bot for YouTube."""
     log_format = '%(asctime)s %(message)s'

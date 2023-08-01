@@ -43,8 +43,8 @@ async def get_live_chat_messages(youtube, live_chatid):
                 await discover_command_requests(youtube, response, live_chatid)
 
             next_page_token = response["nextPageToken"]
-            wait_time = response["pollingIntervalMillis"]/1000
-            await asyncio.sleep(wait_time)
+            #wait_time = response["pollingIntervalMillis"]*1000
+            await asyncio.sleep(5)
 
     except requests.exceptions.HTTPError as request_httperror:
         logger.error(str(request_httperror))
