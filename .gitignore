@@ -12,3 +12,4 @@ test_music/
 *.log
 *.txt
 *.jpg
+*.pickle
