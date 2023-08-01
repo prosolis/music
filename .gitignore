@@ -3,7 +3,6 @@ lib/
 pyvenv.cfg
 lib64
 bin/
-bots/.env
 client_secrets.json
 *.json
 **/__pycache__/

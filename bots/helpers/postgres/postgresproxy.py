@@ -23,6 +23,7 @@ class PostgresProxy:
         self._port = port
 
         self._conn = self.postgres_connection_open()
+        self._conn.set_client_encoding('UTF8')
         logger.info("Postgres Proxy initialized")
 
     def postgres_connection_open(self):
