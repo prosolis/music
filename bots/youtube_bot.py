@@ -7,9 +7,8 @@ from dotenv import load_dotenv
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
-import googleapiclient.errors
 
-from helpers import live_broadcast, live_chat
+from helpers import live_chat, live_broadcast
 
 
 async def main():
@@ -26,6 +25,9 @@ async def main():
 
         live_chat_id = await live_broadcast.get_live_chatid(youtube)
 
+        #live_chat_id = "KicKGFVDQkhaWF9ucGx2OURaa1Q4YUJYMzNzURILS3R5b0RPbHBzNlU"
+        print(live_chat_id)
+
         await live_chat.get_live_chat_messages(youtube, live_chat_id)
 
     except FileNotFoundError as filenotfounderror:
@@ -34,6 +36,7 @@ async def main():
 
 async def youtube_authenticate():
     """Capture YouTube for future usage decrease the number of times we need login into the app"""
+    logger = logging.getLogger("YoutubeBot")
 
     scopes = ["https://www.googleapis.com/auth/youtube.readonly",
             "https://www.googleapis.com/auth/youtube.force-ssl"]
@@ -49,22 +52,24 @@ async def youtube_authenticate():
     if os.path.exists("token.pickle"):
         with open("token.pickle", "rb") as token:
             credentials = pickle.load(token)
+            logger.info("Loading the token.pickle")
 
     # if there are no (valid) credentials availablle, let the user log in.
     if not credentials or not credentials.valid:
         if credentials and credentials.expired and credentials.refresh_token:
             credentials.refresh(Request())
+            logger.info("Using creds to request to access youtube api data")
 
         else:
             flow = InstalledAppFlow.from_client_secrets_file(client_secrets_file, scopes)
-            
+
             credentials = flow.run_local_server(
                 host='localhost',
                 port=8088,
                 authorization_prompt_message='Please visit this URL: {url}',
                 success_message='The auth flow is complete; you may close this window.',
                 open_browser=True)
-            
+
         # save the credentials for the next run
         with open("token.pickle", "wb") as token:
             pickle.dump(credentials, token)
