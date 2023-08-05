@@ -71,11 +71,11 @@ async def discover_command_requests(youtube, response, live_chatid):
 
         if text_message == test_command_str and (is_chat_owner or is_chat_moderator):
             logger.info("Found test command")
-            await respond_test_command()#youtube, live_chatid)
+            await respond_test_command(youtube, live_chatid)
 
         elif text_message == like_command_str:
             logger.info("Found like command")
-            await respond_like_command(author_id)#youtube, live_chatid, )
+            await respond_like_command(author_id)
 
         #elif text_message == song_command_str:
         #    logger.info("Found song command")
@@ -109,7 +109,7 @@ async def respond_test_command(youtube, live_chatid):
     except requests.exceptions.HTTPError as request_httperror:
         logger.error(str(request_httperror))
 
-async def respond_like_command(author_id): #youtube, live_chatid,):
+async def respond_like_command(author_id):
     """Logic for like command, returns a thankful message to youtube live chat"""
     logger = logging.getLogger('YoutubeBot')
 
