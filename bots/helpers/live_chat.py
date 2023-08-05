@@ -27,7 +27,7 @@ async def get_live_chat_messages(youtube, live_chatid):
                     maxResults=1000
                 )
                 response = request.execute()
-                logger.debug("Get LiveChatMessage list - Success!")
+                logger.info("Get LiveChatMessage list - Success!")
 
             else:
                 request = youtube.liveChatMessages().list(
@@ -37,14 +37,18 @@ async def get_live_chat_messages(youtube, live_chatid):
                     pageToken=next_page_token
                 )
                 response = request.execute()
-                logger.debug("Get LiveChatMessage NextPage list - Success!")
+                logger.info("Get LiveChatMessage NextPage list - Success!")
 
             if response:
                 await discover_command_requests(youtube, response, live_chatid)
 
             next_page_token = response["nextPageToken"]
-            wait_time = response["pollingIntervalMillis"]/1000
-            await asyncio.sleep(wait_time)
+            time_till_next_message_is_ready = response["pollingIntervalMillis"]/1000
+
+            if time_till_next_message_is_ready > 216:
+                await asyncio.sleep(time_till_next_message_is_ready)
+            else:
+                await asyncio.sleep(216)
 
     except requests.exceptions.HTTPError as request_httperror:
         logger.error(str(request_httperror))
@@ -56,7 +60,7 @@ async def discover_command_requests(youtube, response, live_chatid):
 
     test_command_str    = "!test"
     like_command_str    = "!like"
-    song_command_str    = "!song"
+    #song_command_str    = "!song"
     artist_command_str  ="!artist"
 
     for items in response["items"]:
@@ -66,19 +70,19 @@ async def discover_command_requests(youtube, response, live_chatid):
         author_id = items["authorDetails"]["channelId"]
 
         if text_message == test_command_str and (is_chat_owner or is_chat_moderator):
-            logger.debug("Found test command")
+            logger.info("Found test command")
             await respond_test_command(youtube, live_chatid)
 
         elif text_message == like_command_str:
-            logger.debug("Found like command")
-            await respond_like_command(youtube, live_chatid, author_id)
+            logger.info("Found like command")
+            await respond_like_command(author_id)
 
-        elif text_message == song_command_str:
-            logger.debug("Found song command")
-            await respond_song_command(youtube, live_chatid)
+        #elif text_message == song_command_str:
+        #    logger.info("Found song command")
+        #    await respond_song_command(youtube, live_chatid)
 
         elif text_message == artist_command_str:
-            logger.debug("Found aritst command")
+            logger.info("Found aritst command")
             await respond_artist_command(youtube, live_chatid)
 
 async def respond_test_command(youtube, live_chatid):
@@ -100,12 +104,12 @@ async def respond_test_command(youtube, live_chatid):
         )
         response = request.execute()
         print(response)
-        logger.debug("Sent test command response to live stream")
+        logger.info("Sent test command response to live stream")
 
     except requests.exceptions.HTTPError as request_httperror:
         logger.error(str(request_httperror))
 
-async def respond_like_command(youtube, live_chatid, author_id):
+async def respond_like_command(author_id):
     """Logic for like command, returns a thankful message to youtube live chat"""
     logger = logging.getLogger('YoutubeBot')
 
@@ -121,27 +125,27 @@ async def respond_like_command(youtube, live_chatid, author_id):
     await mpd.mpd_connection_close()
     await postgres.postgres_connection_close()
 
-    message = "Thanks this data will help us continue bringing the best music to Prosolis Radio"
+    #message = "Thanks this data will help us continue bringing the best music to Prosolis Radio"
 
-    try:
-        request = youtube.liveChatMessages().insert(
-            part="snippet",
-            body={
-                "snippet": {
-                    "liveChatId": live_chatid,
-                    "type": "textMessageEvent",
-                    "textMessageDetails": {
-                        "messageText": message
-                    }
-                }
-            }
-        )
-        response = request.execute()
-        print(response)
-        logger.debug("Sent like command response to live stream")
+    #try:
+    #    request = youtube.liveChatMessages().insert(
+    #        part="snippet",
+    #        body={
+    #            "snippet": {
+    #                "liveChatId": live_chatid,
+    #                "type": "textMessageEvent",
+    #                "textMessageDetails": {
+    #                    "messageText": message
+    #                }
+    #            }
+    #        }
+    #    )
+    #    response = request.execute()
+    #    print(response)
+    logger.info("Sent like command response to live stream")
 
-    except requests.exceptions.HTTPError as request_httperror:
-        logger.error(str(request_httperror))
+    #except requests.exceptions.HTTPError as request_httperror:
+    #    logger.error(str(request_httperror))
 
 async def respond_song_command(youtube, live_chatid):
     """Logic for song command, returns song title and artist to the youtube live chat"""
@@ -168,7 +172,7 @@ async def respond_song_command(youtube, live_chatid):
         )
         response = request.execute()
         print(response)
-        logger.debug("Sent song command response to live stream")
+        logger.info("Sent song command response to live stream")
 
     except requests.exceptions.HTTPError as request_httperror:
         logger.error(str(request_httperror))
@@ -206,7 +210,7 @@ async def respond_artist_command(youtube, live_chatid):
         )
         response = request.execute()
         print(response)
-        logger.debug("Sent artist command response to live stream")
+        logger.info("Sent artist command response to live stream")
 
     except requests.exceptions.HTTPError as request_httperror:
         logger.error(str(request_httperror))
