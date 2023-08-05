@@ -24,8 +24,6 @@ async def main():
         youtube = await youtube_authenticate()
 
         live_chat_id = await live_broadcast.get_live_chatid(youtube)
-
-        #live_chat_id = "KicKGFVDQkhaWF9ucGx2OURaa1Q4YUJYMzNzURILS3R5b0RPbHBzNlU"
         print(live_chat_id)
 
         await live_chat.get_live_chat_messages(youtube, live_chat_id)
