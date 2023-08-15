@@ -1,0 +1,7 @@
+version: '3'
+services:
+  mpd:
+    # will build ./docker/mpd/Dockerfile
+    build:
+      context: .
+      dockerfile: ./docker/mpd/Dockerfile
