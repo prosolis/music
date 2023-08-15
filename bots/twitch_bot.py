@@ -65,8 +65,9 @@ class TwitchBot(commands.Bot):
         await mpd.mpd_connection_close()
         await postgres.postgres_connection_close()
 
-        return_message = '''Thanks this data will help us continue bringing the
-            best music to Prosolis Radio'''
+        return_message = "Thanks this data will help us continue bringing the"\
+            "best music to Prosolis Radio"
+
 
         await ctx.send(return_message)
         self.logger.debug("Sent like command response to twitch stream")
@@ -98,12 +99,12 @@ class TwitchBot(commands.Bot):
         await mpd.mpd_connection_close()
         await postgres.postgres_connection_close()
 
-        return_message = f'''Artist Name: {current_artist}
-        \n Social Links: '''
+        return_message = f"Artist Name: {current_artist}"\
+        "  Social Links: "
 
         for social in socials:
             if social is not None:
-                return_message += f'''{social} \n'''
+                return_message += f"{social} \n"
 
         await ctx.send(return_message)
         self.logger.debug("Sent artist command resspone to twitch stream")

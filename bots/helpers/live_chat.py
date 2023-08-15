@@ -125,7 +125,8 @@ async def respond_like_command(author_id):
     await mpd.mpd_connection_close()
     await postgres.postgres_connection_close()
 
-    #message = "Thanks this data will help us continue bringing the best music to Prosolis Radio"
+    #message = "Thanks this data will help us continue bringing the"\
+    #           "best music to Prosolis Radio"
 
     #try:
     #    request = youtube.liveChatMessages().insert(
@@ -192,8 +193,7 @@ async def respond_artist_command(youtube, live_chatid):
     await mpd.mpd_connection_close()
     await postgres.postgres_connection_close()
 
-    message = f'''Artist Name: {artist} \n
-    YouTube: {socials[0]}'''
+    message = f"Artist Name: {artist} YouTube: {socials[0]}"
 
     try:
         request = youtube.liveChatMessages().insert(
