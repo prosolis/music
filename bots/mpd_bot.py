@@ -52,9 +52,9 @@ async def main():
             await check_song_exists(current_fingerprint, current_title, current_artist)
             await update_play_history(current_fingerprint, current_title, current_artist)
 
-            flag = await mpd.mpd_is_last_song(149)
+            is_last_song_flag = await mpd.mpd_is_last_song()
 
-            if flag:
+            if is_last_song_flag:
                 logger.info("Reached the end of the playlist")
                 await mpd.mpd_shuffle_playlist()
 
