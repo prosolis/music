@@ -11,7 +11,7 @@ from helpers.postgres import postgresproxy
 async def main():
     """Initializes Prosolis Radio Bot for MPD."""
     log_format = '%(asctime)s %(message)s'
-    log_level = 30
+    log_level = 10
 
     logging.basicConfig(filename='mpd_bot.log', filemode='a',
                         level=log_level, format=log_format, encoding="UTF-8")
@@ -52,19 +52,19 @@ async def main():
             await check_song_exists(current_fingerprint, current_title, current_artist)
             await update_play_history(current_fingerprint, current_title, current_artist)
 
+            flag = await mpd.mpd_is_last_song(149)
+
+            if flag:
+                logger.info("Reached the end of the playlist")
+                await mpd.mpd_shuffle_playlist()
+
         else:
             logger.info("Same song, skipping checks and updates")
 
-        next_song_title = await mpd.mpd_next_song_title()
-
-        if next_song_title is None:
-            logger.info("Reached the end of the playlist")
-            await mpd.mpd_shuffle_playlist()
-
         await mpd.mpd_connection_close()
-        logger.info("Starting thread sleep 2 seconds")
+        logger.info("Starting thread sleep 5 seconds")
 
-        await asyncio.sleep(2)
+        await asyncio.sleep(5)
 
 async def check_song_exists(fingerprint, title, artist):
     """Checks if artist and song exists inside the database"""
