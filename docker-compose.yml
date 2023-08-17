@@ -1,7 +1,15 @@
-version: '3'
+version: '3.9'
 services:
-  mpd:
+  mpd_bot:
     # will build ./docker/mpd/Dockerfile
     build:
       context: .
       dockerfile: ./docker/mpd/Dockerfile
+    container_name: mpd_bot
+    network_mode: "host"
+    volumes: 
+      - <host_metadata_path>:/metadata
+    environment:
+      METADATA_PATH: ./metadata
+      POSTGRES_USER: <postgres_user>
+      POSTGRES_PASSWORD: <postgres_password>

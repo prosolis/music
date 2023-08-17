@@ -1,12 +1,16 @@
 FROM python:3.11.4
 
-COPY ./bots/mpd_bot.py /src/mpd_bot.py
+RUN mkdir ./metadata
 
-COPY ./bots/helpers/musicplayer/* /src/helpers/musicplayer/
+WORKDIR /app
 
-COPY ./bots/helpers/postgres/* /src/helpers/postgres/
+COPY ./bots/mpd_bot.py ./mpd_bot.py
 
-RUN chmod +x /src
+COPY ./bots/helpers/musicplayer/* ./helpers/musicplayer/
+
+COPY ./bots/helpers/postgres/* ./helpers/postgres/
+
+RUN chmod +x .
 
 RUN apt update & apt upgrade
 
@@ -15,10 +19,10 @@ RUN pip install -U \
     setuptools \
     wheel
 
-COPY requirements.txt /src/requirements.txt
+COPY requirements.txt ./requirements.txt
 
-RUN pip install -r /src/requirements.txt
+RUN pip install -r ./requirements.txt
 
-WORKDIR /src
+ENV METADATA_PATH="./metadata"
 
-RUN mpd_bot.py
+CMD [ "python","./mpd_bot.py"]
