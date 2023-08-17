@@ -66,7 +66,7 @@ class TwitchBot(commands.Bot):
         await postgres.postgres_connection_close()
 
         return_message = "Thanks this data will help us continue bringing the"\
-            "best music to Prosolis Radio"
+            " best music to Prosolis Radio"
 
 
         await ctx.send(return_message)
