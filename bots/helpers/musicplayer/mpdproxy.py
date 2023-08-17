@@ -1,4 +1,4 @@
-# pylint: disable=no-member
+# pylint: disable=no-member,broad-exception-caught
 """mpdproxy provides basic connectivity and song information from a locally running MPD instance"""
 import logging
 from mpd import MPDClient, MPDError
@@ -38,20 +38,55 @@ class MPDProxy:
         logger.info("MPD localhost has been manually disconnected")
 
     async def mpd_get_current_song_title_and_artist(self):
-        """Fetch the current song's title and artist"""
-        title = self._client.currentsong()['title']
-        artist = self._client.currentsong()['artist']
+        """Fetch the """
+        logger = logging.getLogger('MPDProxy')
+        try:
+            title = self._client.currentsong()['title']
+            artist = self._client.currentsong()['artist']
+        except KeyError as key_error:
+            logger.info("Unable to get current song's title and artist due to KeyError: %s",
+                        key_error)
+
+        except MPDError as mpderror:
+            logger.error("MPD Error when checking the current song title and artist: %s",  mpderror)
+
+        except Exception as exception:
+            logger.error("Unexpected Error: %s", exception)
+
         return title, artist
 
     async def mpd_get_fingerprint(self):
         """Fetch the current song's fingerprint"""
-        fingerprint = self._client.readcomments(
-            self._client.currentsong()['file'])['acoustid_fingerprint']
+        logger = logging.getLogger('MPDProxy')
+        try:
+            fingerprint = self._client.readcomments(
+                self._client.currentsong()['file'])['acoustid_fingerprint']
+        except KeyError as key_error:
+            logger.info("Unable to get next song fingerprint due to KeyError: %s", key_error)
+
+        except MPDError as mpderror:
+            logger.error("MPD Error when checking the current song fingerprint: %s",  mpderror)
+
+        except Exception as exception:
+            logger.error("Unexpected Error: %s", exception)
+
         return fingerprint
 
     async def mpd_get_artist_info(self):
         """Fetch the current song's artist"""
-        artist = self._client.currentsong()['artist']
+        logger = logging.getLogger('MPDProxy')
+        try:
+            artist = self._client.currentsong()['artist']
+
+        except KeyError as key_error:
+            logger.info("Unable to get artist due to KeyError: %s", key_error)
+
+        except MPDError as mpderror:
+            logger.error("MPD Error when checking the current song artist: %s",  mpderror)
+
+        except Exception as exception:
+            logger.error("Unexpected Error: %s", exception)
+
         return artist
 
     async def mpd_dump_song_title(self, folder_path):
@@ -69,6 +104,12 @@ class MPDProxy:
         except OSError as oserror:
             logger.error("Could not open songtitle.txt: %s", oserror)
 
+        except MPDError as mpderror:
+            logger.error("MPD Error when shuffling the playlist: %s", mpderror)
+
+        except Exception as exception:
+            logger.error("Unexpected Error: %s", exception)
+
     async def mpd_dump_song_artist(self, folder_path):
         """Dump the song artist to disk"""
         logger = logging.getLogger('MPDProxy')
@@ -81,8 +122,15 @@ class MPDProxy:
                 song_artist_bytes = bytes(song_artist, 'utf-8')
                 file_open.write(song_artist_bytes)
                 file_open.close()
+
         except OSError as oserror:
             logger.error("Could not open songartist.txt: %s", oserror)
+
+        except MPDError as mpderror:
+            logger.error("MPD Error when shuffling the playlist: %s", mpderror)
+
+        except Exception as exception:
+            logger.error("Unexpected Error: %s", exception)
 
     async def mpd_dump_album_art(self, folder_path):
         """Dump the album art to disk"""
@@ -112,22 +160,70 @@ class MPDProxy:
                         self._client.currentsong()['artist'],
                         keyerror)
 
+        except MPDError as mpderror:
+            logger.error("MPD Error when shuffling the playlist: %s", mpderror)
+
+        except Exception as exception:
+            logger.error("Unexpected Error: %s", exception)
+
     async def mpd_playlist_info(self):
         """Return the current MPD playlist"""
-        return self._client.playlist()
+        logger = logging.getLogger('MPDProxy')
+        try:
+            return self._client.playlist()
+        except MPDError as mpderror:
+            logger.error("MPD Error when getting playlist info: %s",
+                         mpderror)
+        except Exception as exception:
+            logger.error("Unexpected Error: %s", exception)
 
     async def mpd_next_song_title(self):
         """Fetch the next song's artist and title"""
         logger = logging.getLogger('MPDProxy')
-        title = None
-
         try:
             title = self._client.playlistid(self._client.status()['nextsongid'])[0]['title']
         except KeyError as key_error:
             logger.info("Unable to get next song title due to KeyError: %s", key_error)
 
+        except MPDError as mpderror:
+            logger.error("MPD Error when checking the next song title: %s",  mpderror)
+
+        except Exception as exception:
+            logger.error("Unexpected Error: %s", exception)
+
         return title
 
     async def mpd_shuffle_playlist(self):
-        """Takes the current playlist and shuffles it"""
-        self._client.shuffle()
+        """Shuffle the current playlist"""
+        logger = logging.getLogger('MPDProxy')
+        try:
+            self._client.shuffle()
+        except MPDError as mpderror:
+            logger.error("MPD Error when shuffling the playlist: %s", mpderror)
+
+        except Exception as exception:
+            logger.error("Unexpected Error: %s", exception)
+
+    async def mpd_is_last_song(self):
+        """Takes the current song and sees if it is the last in the playlist"""
+        logger = logging.getLogger('MPDProxy')
+
+        try:
+            current_song_position = self._client.status()['song']
+            #Add one here as song returns the array slot and not the mpc position.
+            current_song_position = int(current_song_position) + 1
+
+            songs = self._client.playlist()
+            total_songs = len(songs)
+
+            if (total_songs - current_song_position) == 0:
+                return True
+
+        except MPDError as mpderror:
+            logger.error("MPD Error when check is this the last song in the playlist: %s",
+                            mpderror)
+
+        except Exception as exception:
+            logger.error("Unexpected Error: %s", exception)
+
+        return False

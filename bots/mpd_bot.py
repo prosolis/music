@@ -51,19 +51,19 @@ async def main():
             await check_song_exists(current_fingerprint, current_title, current_artist)
             await update_play_history(current_fingerprint, current_title, current_artist)
 
+            is_last_song_flag = await mpd.mpd_is_last_song()
+
+            if is_last_song_flag:
+                logger.info("Reached the end of the playlist")
+                await mpd.mpd_shuffle_playlist()
+
         else:
             logger.info("Same song, skipping checks and updates")
 
-        next_song_title = await mpd.mpd_next_song_title()
-
-        if next_song_title is None:
-            logger.info("Reached the end of the playlist")
-            await mpd.mpd_shuffle_playlist()
-
         await mpd.mpd_connection_close()
-        logger.info("Starting thread sleep 2 seconds")
+        logger.info("Starting thread sleep 5 seconds")
 
-        await asyncio.sleep(2)
+        await asyncio.sleep(5)
 
 async def check_song_exists(fingerprint, title, artist):
     """Checks if artist and song exists inside the database"""
