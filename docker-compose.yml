@@ -13,3 +13,8 @@ services:
       METADATA_PATH: ./metadata
       POSTGRES_USER: <postgres_user>
       POSTGRES_PASSWORD: <postgres_password>
+    deploy:
+      resources:
+        limits:
+          cpus: '0.01'
+          memory: 50M

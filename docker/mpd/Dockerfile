@@ -2,6 +2,8 @@ FROM python:3.11.4
 
 RUN mkdir ./metadata
 
+RUN mkdir ./logs
+
 WORKDIR /app
 
 COPY ./bots/mpd_bot.py ./mpd_bot.py
@@ -22,7 +24,5 @@ RUN pip install -U \
 COPY requirements.txt ./requirements.txt
 
 RUN pip install -r ./requirements.txt
-
-ENV METADATA_PATH="./metadata"
 
 CMD [ "python","./mpd_bot.py"]
