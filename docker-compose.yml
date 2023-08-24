@@ -1,0 +1,22 @@
+version: '3.9'
+services:
+  mpd_bot:
+    container_name: mpd_bot
+    network_mode: "host"
+    volumes: 
+      - <host_metadata_path>:/metadata
+      - <host_logs_path>:/app/logs
+    environment:
+      METADATA_PATH: ./metadata
+      POSTGRES_USER: <postgres_user>
+      POSTGRES_PASSWORD: <postgres_password>
+      PUID: <user_puid>
+      PGID: <group_pgid>
+    deploy:
+      resources:
+        limits:
+          cpus: '0.01'
+          memory: 50M
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true

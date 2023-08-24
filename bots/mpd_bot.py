@@ -2,6 +2,7 @@
 import asyncio
 import logging
 import os
+import gc
 from dotenv import load_dotenv
 
 from helpers.musicplayer import mpdproxy
@@ -13,10 +14,12 @@ async def main():
     log_format = '%(asctime)s %(message)s'
     log_level = 10
 
-    logging.basicConfig(filename='mpd_bot.log', filemode='a',
+    logging.basicConfig(filename='/app/logs/mpd_bot.log', filemode='a',
                         level=log_level, format=log_format, encoding="UTF-8")
     logger = logging.getLogger('MPDBot')
     logger.info("MPD Bot has started")
+
+    gc.enable()
 
     load_dotenv()
     metadata_folderpath = os.getenv("METADATA_PATH")
@@ -83,6 +86,8 @@ async def check_song_exists(fingerprint, title, artist):
     logger.info("%s by %s exists inside DB", title, artist)
     logger.info("Finished check_song_exists")
 
+    del postgres
+
 async def update_play_history(fingerprint, title, artist):
     """Update play_history table with current song"""
     logger = logging.getLogger('MPDBot')
@@ -95,6 +100,8 @@ async def update_play_history(fingerprint, title, artist):
 
     logger.info("Finished update_play_history")
 
+    del postgres
+
 async def check_metadata_folder(metadata_folderpath):
     """Check if metadata is found and if not create it"""
     logger = logging.getLogger('MPDBot')
@@ -104,6 +111,8 @@ async def check_metadata_folder(metadata_folderpath):
     if not folder_exist:
         os.makedirs(metadata_folderpath)
         logger.info("Metadata file created at %s", metadata_folderpath)
+
+    del folder_exist
 
 if __name__ == "__main__":
     asyncio.run(main())
