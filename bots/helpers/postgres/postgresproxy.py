@@ -41,6 +41,7 @@ class PostgresProxy:
             return None
 
         logger.info("Connection to Postgres SQL Database established")
+
         return conn
 
     async def postgres_connection_close(self):
@@ -145,6 +146,8 @@ class PostgresProxy:
             logger.error("Was unable to finish, issue with artist_exists: %s", error)
             self.print_psycopg2_exception(error)
 
+        cursor.close()
+
     async def song_exists(self, title, artist, fingerprint):
         """Does the given song already exist inside the DB if not insert the song"""
         logger = logging.getLogger('PostgresProxy')
@@ -178,6 +181,8 @@ class PostgresProxy:
             logger.error("Was unable to finsih, issue with song_exists: %s", error)
             self.print_psycopg2_exception(error)
 
+        cursor.close()
+
     async def insert_play_history(self, title, artist, fingerprint):
         """insert the song into play history"""
         logger = logging.getLogger('PostgresProxy')
@@ -199,6 +204,8 @@ class PostgresProxy:
         except Exception as error:
             logger.error("Was unable to finsih, issue with insert_play_history: %s", error)
             self.print_psycopg2_exception(error)
+
+        cursor.close()
 
     def print_psycopg2_exception(self, error):
         """Define a function that handles and parses psycopg2 exceptions"""
